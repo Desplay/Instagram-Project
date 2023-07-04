@@ -2,11 +2,29 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type JWT {
+  access_token: String!
+}
+
+type Profile {
+  name: String!
+  birthday: DateTime!
+  age: Int!
+  description: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Query {
-  hello: String!
-  LogIn(name: String!, email: String!, password: String!): String!
+  LogIn(UsernameOrEmail: String!, password: String!): JWT!
+  test: String!
+  GetDetailProfile: Profile!
 }
 
 type Mutation {
-  SignUp(name: String!, email: String!, password: String!): String!
+  SignUp(username: String!, email: String!, password: String!): JWT!
+  CreateProfile(name: String!, birthday: DateTime!, age: Int!, description: String!): String!
 }

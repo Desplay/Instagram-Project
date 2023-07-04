@@ -1,18 +1,15 @@
-// Model for users datanbase
-
 import { Schema, Document, model } from 'mongoose';
 
-export class User extends Document {
-  _id: string;
-  name: string;
+export interface User extends Document {
+  username: string;
   email: string;
   password: string;
 }
 
 export const UserSchema = new Schema<User>({
-  name: { type: String, required: true },
+  username: { type: String, required: true },
   email: { type: String, required: true },
-  password: { type: String, required: true },
+  password: { type: String, required: true, select: false },
 });
 
 export const UserModel = model<User>('User', UserSchema);

@@ -1,23 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { GraphQLModule } from '@nestjs/graphql';
 import { AppService } from './app.service';
-import { ApolloDriver } from '@nestjs/apollo';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { MongooseModule } from '@nestjs/mongoose';
+import { ProfilesModule } from './modules/profiles/profiles.module';
+import { MongooseModule } from './modules/system/mongoose/mongoose.module';
+import { GraphqlModule } from './modules/system/graphql/graphql.module';
 
 @Module({
-  imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/MongoDB_NestJS_GraphQL'),
-    GraphQLModule.forRoot({
-      driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
-    }),
-    UsersModule,
-    AuthModule,
-  ],
-  controllers: [AppController],
+  imports: [UsersModule, AuthModule, ProfilesModule, MongooseModule, GraphqlModule],
   providers: [AppService],
 })
 export class AppModule {}

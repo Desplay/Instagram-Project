@@ -3,19 +3,14 @@ import { ProfilesService } from './profiles.service';
 import { JwtService } from '@nestjs/jwt';
 import { ProfileModel } from './profiles.entity';
 import { Profile } from './profiles.dto';
-<<<<<<< Updated upstream
-=======
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UseGuards } from '@nestjs/common';
->>>>>>> Stashed changes
 
 @Resolver()
 export class ProfilesResolver {
   constructor(private readonly profileService: ProfilesService, private readonly jwtService: JwtService) {}
-<<<<<<< Updated upstream
-=======
+
   @UseGuards(AuthGuard)
->>>>>>> Stashed changes
   @Mutation(() => String)
   async CreateProfile(
     @Args({ name: 'name', type: () => String }) name: string,
@@ -41,10 +36,7 @@ export class ProfilesResolver {
     return 'Profile created successfully';
   }
 
-<<<<<<< Updated upstream
-=======
   @UseGuards(AuthGuard)
->>>>>>> Stashed changes
   @Query(() => Profile)
   async GetDetailProfile(@Context('req') req: Request) {
     const access_token = req.headers['access_token'];

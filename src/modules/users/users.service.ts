@@ -9,11 +9,11 @@ import { User } from './user.entity';
 export class UsersService {
   constructor(@InjectModel('User') private readonly UserModel: Model<User>) {}
 
-  async createUser(username: string, email: string, password: string): Promise<User> {
+  async createUser(email: string, username: string, password: string): Promise<User> {
     if (await this.findOneUser(email)) {
       throw new Error('User already exists!');
     }
-    const newUser = new this.UserModel({ username, email, password });
+    const newUser = new this.UserModel({ email, username, password });
     return await newUser.save();
   }
 

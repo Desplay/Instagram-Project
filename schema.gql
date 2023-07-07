@@ -32,4 +32,6 @@ type Query {
 type Mutation {
   SignUp(username: String!, email: String!, password: String!): JWT!
   CreateProfile(name: String!, birthday: DateTime!, age: Int!, description: String!): String!
+  UpdateProfile(name: String!, birthday: DateTime!, age: Int!, description: String!): String!
+  DeleteProfile: String!
 }

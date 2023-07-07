@@ -21,15 +21,15 @@ export class ProfilesResolver {
   ) {
     const access_token = req.headers['access_token'];
     const payload = this.jwtService.decode(access_token);
-    const id_user = payload['id_user'];
-    if (!id_user) throw new Error('User not found');
-    if (await this.profileService.findProfile(id_user)) throw new Error('Profile already exists');
+    const user_id = payload['user_id'];
+    if (!user_id) throw new Error('User not found');
+    if (await this.profileService.findProfile(user_id)) throw new Error('Profile already exists');
     const newProfile = new ProfileModel({
       name: name,
       birthday: birthday,
       age: age,
       description: description,
-      userId: id_user,
+      userId: user_id,
     });
     const profile = await this.profileService.createProfile(newProfile);
     if (!profile) throw new Error('Profile creation failed');
@@ -37,13 +37,52 @@ export class ProfilesResolver {
   }
 
   @UseGuards(AuthGuard)
+  @Mutation(() => String)
+  async UpdateProfile(
+    @Args({ name: 'name', type: () => String }) name: string,
+    @Args({ name: 'birthday', type: () => Date }) birthday: Date,
+    @Args({ name: 'age', type: () => Int }) age: number,
+    @Args({ name: 'description', type: () => String }) description: string,
+    @Context('req') req: Request,
+  ) {
+    const access_token = req.headers['access_token'];
+    const payload = this.jwtService.decode(access_token);
+    const user_id = payload['user_id'];
+    if (!user_id) throw new Error('User not found');
+    if (!(await this.profileService.findProfile(user_id))) throw new Error('Profile not found');
+    const newProfile = new ProfileModel({
+      name: name,
+      birthday: birthday,
+      age: age,
+      description: description,
+      userId: user_id,
+    });
+    const profile = await this.profileService.updateProfile(newProfile);
+    if (!profile) throw new Error('Profile update failed');
+    return 'Profile updated successfully';
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => String)
+  async DeleteProfile(@Context('req') req: Request) {
+    const access_token = req.headers['access_token'];
+    const payload = this.jwtService.decode(access_token);
+    const user_id = payload['user_id'];
+    if (!user_id) throw new Error('User not found');
+    if (!(await this.profileService.findProfile(user_id))) throw new Error('Profile not found');
+    const profile = await this.profileService.deleteProfile(user_id);
+    if (!profile) throw new Error('Profile deletion failed');
+    return 'Profile deleted successfully';
+  }
+
+  @UseGuards(AuthGuard)
   @Query(() => Profile)
   async GetDetailProfile(@Context('req') req: Request) {
     const access_token = req.headers['access_token'];
     const payload = this.jwtService.decode(access_token);
-    const id_user = payload['id_user'];
-    if (!id_user) throw new Error('User not found');
-    if (!(await this.profileService.findProfile(id_user))) throw new Error('Profile not found');
-    return await this.profileService.findProfile(id_user);
+    const user_id = payload['user_id'];
+    if (!user_id) throw new Error('User not found');
+    if (!(await this.profileService.findProfile(user_id))) throw new Error('Profile not found');
+    return await this.profileService.findProfile(user_id);
   }
 }

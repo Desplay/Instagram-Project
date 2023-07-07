@@ -23,7 +23,6 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const access_token = GqlExecutionContext.create(context).getContext().req.headers.access_token;
     if (!access_token) throw new Error('Access token not found');
-    const token_valid = await this.validateToken(access_token);
-    if (token_valid) return true;
+    return await this.validateToken(access_token);
   }
 }

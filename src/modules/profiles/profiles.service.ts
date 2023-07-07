@@ -15,4 +15,18 @@ export class ProfilesService {
   async findProfile(id: string): Promise<Profile | undefined> {
     return await this.ProfileModel.findOne({ userId: id }).exec();
   }
+
+  async updateProfile(profileInput: Profile): Promise<Profile | undefined> {
+    const profile = {
+      name: profileInput.name,
+      birthday: profileInput.birthday,
+      age: profileInput.age,
+      description: profileInput.description,
+    };
+    return await this.ProfileModel.findOneAndUpdate({ userId: profileInput.userId }, profile).exec();
+  }
+
+  async deleteProfile(id: string): Promise<Profile | undefined> {
+    return await this.ProfileModel.findOneAndDelete({ userId: id }).exec();
+  }
 }

@@ -1,11 +1,9 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { ProfilesModule } from './modules/profiles/profiles.module';
-import { MongooseModule } from './modules/system/mongoose/mongoose.module';
-import { GraphqlModule } from './modules/system/graphql/graphql.module';
+import { ServicesModule } from './modules/modules.module';
 
 @Module({
-  imports: [UsersModule, AuthModule, ProfilesModule, MongooseModule, GraphqlModule],
+  imports: [UsersModule, AuthModule, ServicesModule],
 })
 export class AppModule {}

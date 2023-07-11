@@ -8,8 +8,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
       transport: {
         service: 'gmail',
         auth: {
-          user: 'desshido2811@gmail.com',
-          pass: 'knaxvbnlksxiigre',
+          // your personal gmail account
         },
       },
     }),

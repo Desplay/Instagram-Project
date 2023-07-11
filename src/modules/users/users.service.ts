@@ -4,16 +4,26 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './user.entity';
+import { OTPCode } from 'src/auth/auth.entity';
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel('User') private readonly UserModel: Model<User>) {}
 
-  async createUser(email: string, username: string, password: string): Promise<User> {
+  async createUser(email: string, username: string, password: string, OTPCode: OTPCode): Promise<User> {
     if (await this.findOneUser(email)) {
       throw new Error('User already exists!');
     }
-    const newUser = new this.UserModel({ email, username, password });
+    const newUser = new this.UserModel({
+      deactive: false,
+      email,
+      username,
+      password,
+      OTPCode: {
+        verify: false,
+        ...OTPCode,
+      },
+    }) as User;
     return await newUser.save();
   }
 

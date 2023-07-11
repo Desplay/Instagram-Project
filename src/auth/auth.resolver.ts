@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { JWT } from './auth.dto';
 
@@ -24,5 +24,17 @@ export class AuthResolver {
   ): Promise<JWT> {
     const user = { username, email, password };
     return await this.authService.SignUp(user);
+  }
+
+  @Mutation(() => String)
+  async verifyAccount(@Args({ name: 'OTPCode', type: () => String }) OTPCode: string, @Context('req') req: Request): Promise<string> {
+    const token = req.headers['access_token'];
+    return await this.authService.verifyAccount(token, OTPCode);
+  }
+
+  @Mutation(() => String)
+  async resendOTPCode(@Context('req') req: Request): Promise<string> {
+    const token = req.headers['access_token'];
+    return await this.authService.resendOTPCode(token);
   }
 }

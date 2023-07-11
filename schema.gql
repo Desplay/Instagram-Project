@@ -2,13 +2,13 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type JWT {
+  access_token: String!
+}
+
 type User {
   username: String
   email: String
-}
-
-type JWT {
-  access_token: String!
 }
 
 type Profile {
@@ -24,13 +24,15 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Query {
-  GetUser(UserID: String!): User!
   SignIn(UsernameOrEmail: String!, password: String!): JWT!
+  GetUser(UserID: String!): User!
   GetDetailProfile: Profile!
 }
 
 type Mutation {
   SignUp(username: String!, email: String!, password: String!): JWT!
+  verifyAccount(OTPCode: String!): String!
+  resendOTPCode: String!
   CreateProfile(name: String!, birthday: DateTime!, age: Int!, description: String!): String!
   UpdateProfile(name: String!, birthday: DateTime!, age: Int!, description: String!): String!
   DeleteProfile: String!

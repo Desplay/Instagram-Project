@@ -12,3 +12,9 @@ export interface UserSignUp {
   username: string;
   password: string;
 }
+
+export interface OTPCode {
+  code: string;
+  dateCreated: number;
+  dateExpired: number;
+}

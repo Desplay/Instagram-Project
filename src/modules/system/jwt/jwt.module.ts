@@ -8,6 +8,7 @@ import { UsersModule } from 'src/modules/users/users.module';
   imports: [
     forwardRef(() => UsersModule),
     JWT.register({
+      // config in src/config/jwt_constants.config.ts
       secret: jwtConstants.secret,
     }),
   ],

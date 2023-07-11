@@ -36,4 +36,8 @@ type Mutation {
   CreateProfile(name: String!, birthday: DateTime!, age: Int!, description: String!): String!
   UpdateProfile(name: String!, birthday: DateTime!, age: Int!, description: String!): String!
   DeleteProfile: String!
+  singleUpload(file: Upload!): Boolean!
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload

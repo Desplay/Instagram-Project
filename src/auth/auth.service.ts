@@ -40,7 +40,6 @@ export class AuthService {
 
   async SignIn(user: UserLogIn): Promise<any> {
     const user_exist = await this.validateUser(user.NameOrEmail, user.password);
-    if (!user_exist.OTPCode.verify) throw new Error('Account is not verified');
     const payload = { user_id: user_exist._id };
     return { access_token: await this.jwtService.CreateToken(payload) };
   }

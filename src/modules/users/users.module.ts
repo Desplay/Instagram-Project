@@ -1,15 +1,15 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+
 import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
-import { UsersController } from './users.controller';
-import { MongooseModule } from '@nestjs/mongoose';
-import { UserSchema } from './user.model';
-import { AuthService } from 'src/auth/auth.service';
+import { UserSchema } from './user.entity';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { JwtModule } from '../systems/jwt/jwt.module';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: 'User', schema: UserSchema }])],
-  providers: [UsersResolver, UsersService, AuthService],
-  controllers: [UsersController],
+  imports: [forwardRef(() => JwtModule), MongooseModule.forFeature([{ name: 'User', schema: UserSchema }])],
+  providers: [UsersResolver, UsersService, AuthGuard],
   exports: [UsersService],
 })
 export class UsersModule {}

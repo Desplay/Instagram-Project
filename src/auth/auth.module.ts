@@ -5,11 +5,12 @@ import { AuthService } from './auth.service';
 import { AuthResolver } from './auth.resolver';
 import { UsersModule } from 'src/modules/users/users.module';
 import { AuthGuard } from './auth.guard';
-import { JwtModule } from 'src/modules/system/jwt/jwt.module';
-import { MailModule } from 'src/modules/system/mail/mail.module';
+import { JwtModule } from 'src/modules/systems/jwt/jwt.module';
+import { MailModule } from 'src/modules/systems/mail/mail.module';
+import { ProfilesModule } from 'src/modules/profiles/profiles.module';
 
 @Module({
-  imports: [UsersModule, JwtModule, MailModule, PassportModule.register({ defaultStrategy: 'jwt' })],
+  imports: [UsersModule, ProfilesModule, JwtModule, MailModule, PassportModule.register({ defaultStrategy: 'jwt' })],
   providers: [AuthService, AuthResolver, AuthGuard],
   exports: [AuthService, AuthGuard],
 })

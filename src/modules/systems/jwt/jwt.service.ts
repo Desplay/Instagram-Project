@@ -11,10 +11,10 @@ export class JwtService {
     const Invalid_token = payload === null || payload['user_id'] === undefined || payload['iat'] === undefined || payload['exp'] === undefined;
     if (Invalid_token) throw new Error('Invalid token');
     const timeNow = new Date().getTime();
-    console.log(timeNow, payload['iat'], payload['exp']);
     if (timeNow < payload['iat'] || timeNow > payload['exp']) throw new Error('Token expired');
     const user = await this.usersService.findOneUserById(payload['user_id']);
     if (!user) throw new Error('Invalid user');
+    if (!user.OTPCode.verify) throw new Error('user is not verified');
     return payload;
   }
 

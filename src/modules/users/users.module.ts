@@ -5,7 +5,7 @@ import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
 import { UserSchema } from './user.entity';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { JwtModule } from '../system/jwt/jwt.module';
+import { JwtModule } from '../systems/jwt/jwt.module';
 
 @Module({
   imports: [forwardRef(() => JwtModule), MongooseModule.forFeature([{ name: 'User', schema: UserSchema }])],

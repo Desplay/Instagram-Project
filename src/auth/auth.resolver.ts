@@ -33,8 +33,7 @@ export class AuthResolver {
   }
 
   @Mutation(() => String)
-  async resendOTPCode(@Context('req') req: Request): Promise<string> {
-    const token = req.headers['access_token'];
-    return await this.authService.resendOTPCode(token);
+  async resendOTPCode(@Args({ name: 'NameOrEmail', type: () => String }) NameOrEmail: string): Promise<string> {
+    return await this.authService.resendOTPCode(NameOrEmail);
   }
 }

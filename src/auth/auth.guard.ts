@@ -1,5 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { JwtService } from 'src/modules/system/jwt/jwt.service';
+import { JwtService } from 'src/modules/systems/jwt/jwt.service';
 import { GqlExecutionContext } from '@nestjs/graphql';
 
 @Injectable()

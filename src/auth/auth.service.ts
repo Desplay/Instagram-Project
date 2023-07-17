@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/modules/users/users.service';
 import { genSaltSync, hashSync, compareSync } from 'bcrypt';
 import { JwtService } from 'src/modules/systems/jwt/jwt.service';
-import { JWT, UserLogIn, UserSignUp, OTPCode } from './auth.entity';
-import { User } from 'src/modules/users/user.entity';
+import { JWT, UserLogIn, UserSignUp, OTPCode } from '../data/entity/auth.entity';
+import { User } from 'src/data/entity/user.entity';
 import { customAlphabet } from 'nanoid';
 import { MailService } from 'src/modules/systems/mail/mail.service';
 import { ProfilesService } from 'src/modules/profiles/profiles.service';
-import { ProfileModel } from 'src/modules/profiles/profiles.entity';
+import { ProfileModel } from 'src/data/entity/profile.entity';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +24,6 @@ export class AuthService {
       dateCreated: new Date().getTime(),
       dateExpired: new Date().getTime() + 5 * 60 * 1000,
     };
-    console.log(newOTPCode);
     return newOTPCode;
   }
 
@@ -61,7 +60,7 @@ export class AuthService {
       birthday: null,
       age: null,
       description: null,
-      user_id: new_user._id,
+      userId: new_user._id,
     });
     await this.profilesService.createProfile(new_profile);
     const payload = { user_id: new_user._id };

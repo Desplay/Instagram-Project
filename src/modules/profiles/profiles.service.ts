@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Profile } from './profiles.entity';
+import { Profile } from '../../data/entity/profile.entity';
 
 @Injectable()
 export class ProfilesService {
@@ -16,14 +16,14 @@ export class ProfilesService {
     return await this.ProfileModel.findOne({ userId: id }).exec();
   }
 
-  async updateProfile(profileInput: Profile): Promise<Profile | undefined> {
+  async updateProfile(user_id: string, profileInput: any): Promise<Profile | undefined> {
     const profile = {
       name: profileInput.name,
       birthday: profileInput.birthday,
       age: profileInput.age,
       description: profileInput.description,
     };
-    return await this.ProfileModel.findOneAndUpdate({ userId: profileInput.userId }, profile).exec();
+    return await this.ProfileModel.findByIdAndUpdate(user_id, profile, { new: true }).exec();
   }
 
   async deleteProfile(id: string): Promise<Profile | undefined> {

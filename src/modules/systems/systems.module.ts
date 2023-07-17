@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from './mongoose/mongoose.module';
 import { GraphqlModule } from './graphql/graphql.module';
 import { MailModule } from './mail/mail.module';
-import { UploadfileModule } from './uploadfile/uploadfile.module';
+import { GcpModule } from './gcp/gcp.module';
 
 @Module({
-  imports: [MongooseModule, GraphqlModule, MailModule, UploadfileModule],
+  imports: [MongooseModule, GraphqlModule, MailModule, GcpModule],
 })
 export class SystemsModule {}

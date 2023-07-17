@@ -1,8 +1,8 @@
 import { Args, Context, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ProfilesService } from './profiles.service';
-import { JwtService } from '@nestjs/jwt';
-import { ProfileModel } from './profiles.entity';
-import { Profile } from './profiles.dto';
+import { JwtService } from 'src/modules/systems/jwt/jwt.service';
+import { ProfileModel } from '../../data/entity/profile.entity';
+import { Profile } from '../../data/dto/profile.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UseGuards } from '@nestjs/common';
 
@@ -20,7 +20,7 @@ export class ProfilesResolver {
     @Context('req') req: Request,
   ) {
     const access_token = req.headers['access_token'];
-    const payload = this.jwtService.decode(access_token);
+    const payload = this.jwtService.verifyToken(access_token);
     const user_id = payload['user_id'];
     if (!user_id) throw new Error('User not found');
     if (await this.profileService.findProfile(user_id)) throw new Error('Profile already exists');
@@ -46,18 +46,17 @@ export class ProfilesResolver {
     @Context('req') req: Request,
   ) {
     const access_token = req.headers['access_token'];
-    const payload = this.jwtService.decode(access_token);
+    const payload = this.jwtService.verifyToken(access_token);
     const user_id = payload['user_id'];
     if (!user_id) throw new Error('User not found');
     if (!(await this.profileService.findProfile(user_id))) throw new Error('Profile not found');
-    const newProfile = new ProfileModel({
+    const newProfile = {
       name: name,
       birthday: birthday,
       age: age,
       description: description,
-      userId: user_id,
-    });
-    const profile = await this.profileService.updateProfile(newProfile);
+    };
+    const profile = await this.profileService.updateProfile(user_id, newProfile);
     if (!profile) throw new Error('Profile update failed');
     return 'Profile updated successfully';
   }
@@ -66,7 +65,7 @@ export class ProfilesResolver {
   @Mutation(() => String)
   async DeleteProfile(@Context('req') req: Request) {
     const access_token = req.headers['access_token'];
-    const payload = this.jwtService.decode(access_token);
+    const payload = this.jwtService.verifyToken(access_token);
     const user_id = payload['user_id'];
     if (!user_id) throw new Error('User not found');
     if (!(await this.profileService.findProfile(user_id))) throw new Error('Profile not found');
@@ -77,9 +76,9 @@ export class ProfilesResolver {
 
   @UseGuards(AuthGuard)
   @Query(() => Profile)
-  async GetDetailProfile(@Context('req') req: Request) {
+  async ShowProfile(@Context('req') req: Request) {
     const access_token = req.headers['access_token'];
-    const payload = this.jwtService.decode(access_token);
+    const payload = this.jwtService.verifyToken(access_token);
     const user_id = payload['user_id'];
     if (!user_id) throw new Error('User not found');
     if (!(await this.profileService.findProfile(user_id))) throw new Error('Profile not found');

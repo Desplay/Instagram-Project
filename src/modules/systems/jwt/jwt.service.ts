@@ -19,7 +19,7 @@ export class JwtService {
   }
 
   async CreateToken(payload: any): Promise<string> {
-    const new_payload = { ...payload, iat: new Date().getTime(), exp: new Date().getTime() + 5 * 60 * 1000 };
+    const new_payload = { ...payload, iat: new Date().getTime(), exp: new Date().getTime() + 60 * 60 * 1000 };
     return await this.jwtService.signAsync(new_payload);
   }
 }

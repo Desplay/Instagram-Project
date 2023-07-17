@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { JWT } from './auth.dto';
+import { JWT } from '../data/dto/jwt.dto';
 
 @Resolver()
 export class AuthResolver {

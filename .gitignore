@@ -36,4 +36,5 @@ lerna-debug.log*
 
 # local
 /note*
-/src/config/
+/src/config/*.json
+/src/config/*.ts

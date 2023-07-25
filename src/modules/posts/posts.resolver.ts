@@ -1,11 +1,11 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
-import { Post, Posts } from 'src/data/dto/post.dto';
+import { Post, Posts } from 'src/common/dto/post.dto';
 import { PostsService } from './posts.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { JwtService } from '../systems/jwt/jwt.service';
-import { PostModel } from 'src/data/entity/post.entity';
+import { PostModel } from 'src/common/entity/post.entity';
 
 @Resolver()
 export class PostsResolver {
@@ -20,10 +20,8 @@ export class PostsResolver {
     file: FileUpload,
     @Context('req') req: Request,
   ): Promise<Post> {
-    const access_token = req.headers['access_token'];
-    const payload = await this.jwtService.verifyToken(access_token);
+    const payload = await this.jwtService.extractToken(req.headers['access_token']);
     const user_id = payload['user_id'];
-    if (!user_id) throw new Error('User not found');
     const newPost = new PostModel({
       title: title,
       content: content,
@@ -43,12 +41,7 @@ export class PostsResolver {
     @Args({ name: 'content', type: () => String }) content: string,
     @Args({ name: 'file', type: () => GraphQLUpload, nullable: true })
     file: FileUpload,
-    @Context('req') req: Request,
   ): Promise<Post> {
-    const access_token = req.headers['access_token'];
-    const payload = await this.jwtService.verifyToken(access_token);
-    const user_id = payload['user_id'];
-    if (!user_id) throw new Error('User not found');
     const newPost = {
       title: title,
       content: content,
@@ -62,21 +55,25 @@ export class PostsResolver {
   @UseGuards(AuthGuard)
   @Mutation(() => String)
   async deletePost(@Args({ name: 'id', type: () => String }) id: string): Promise<string> {
-    try {
-      await this.postSevice.deletePost(id);
-      return 'Post deleted successfully';
-    } catch (error) {
-      throw new Error('Post delete failed');
-    }
+    if (!(await this.postSevice.deletePost(id))) throw new Error('Post delete failed');
+    return 'Post deleted successfully';
+  }
+
+  @UseGuards(AuthGuard)
+  @Query(() => Post)
+  async getPost(@Args({ name: 'id', type: () => String }) id: string): Promise<Post> {
+    const post = await this.postSevice.findPost(id);
+    if (!post) throw new Error('Post not found');
+    return post;
   }
 
   @UseGuards(AuthGuard)
   @Query(() => Posts)
-  async getAllPosts(@Context('req') req: Request): Promise<Post[]> {
-    const access_token = req.headers['access_token'];
-    const payload = await this.jwtService.verifyToken(access_token);
+  async getAllPosts(@Context('req') req: Request): Promise<Posts> {
+    const payload = await this.jwtService.extractToken(req.headers['access_token']);
     const user_id = payload['user_id'];
-    const posts = await this.postSevice.getAllPosts(user_id);
-    return posts;
+    const posts: Post[] = await this.postSevice.getAllPosts(user_id);
+    if (!posts) throw new Error('This user has no posts');
+    return { posts: posts };
   }
 }

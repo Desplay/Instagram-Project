@@ -18,19 +18,41 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Profiles {
+  profiles: [Profile!]!
+}
+
+type Post {
+  id: String!
+  title: String!
+  content: String!
+  imageUrl: String!
+}
+
+type Posts {
+  posts: [Post!]!
+}
+
 type Query {
   SignIn(UsernameOrEmail: String!, password: String!): JWT!
-  GetDetailProfile: Profile!
+  ShowProfile: Profile!
+  findProfile(profile_name: String!): Profiles!
+  getPost(id: String!): Post!
+  getAllPosts: Posts!
 }
 
 type Mutation {
   SignUp(username: String!, email: String!, password: String!): JWT!
   verifyAccount(OTPCode: String!): String!
   resendOTPCode(NameOrEmail: String!): String!
+  resetPassword(OTPCode: String!, password: String!): String!
+  forgotPassword(NameOrEmail: String!): String!
   CreateProfile(name: String!, birthday: DateTime!, age: Int!, description: String!): String!
   UpdateProfile(name: String!, birthday: DateTime!, age: Int!, description: String!): String!
   DeleteProfile: String!
-  singleUpload(file: Upload!): String!
+  createPost(title: String!, content: String!, file: Upload): Post!
+  updatePost(id: String!, title: String!, content: String!, file: Upload): Post!
+  deletePost(id: String!): String!
 }
 
 """The `Upload` scalar type represents a file upload."""

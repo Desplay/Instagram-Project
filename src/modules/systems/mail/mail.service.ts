@@ -7,8 +7,8 @@ export class MailService {
   async sendMail(userEmail: string, otpCode: any): Promise<any> {
     await this.mailerService.sendMail({
       to: userEmail,
-      from: '<noreply>desplayshido@gmail.com',
-      subject: 'Verify your account',
+      from: 'noreply.desplayshido@gmail.com',
+      subject: 'Verify your account in NestJS GraphQL MongoDB Basic',
       html: `your OTP code is: ${otpCode}, \n OTP code will be expired in 5 minutes`,
     });
   }

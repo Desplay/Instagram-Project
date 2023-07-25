@@ -7,3 +7,8 @@ export class Profile {
   @Field(() => Int) age: number;
   @Field(() => String) description: string;
 }
+
+@ObjectType()
+export class Profiles {
+  @Field(() => [Profile]) profiles: Profile[];
+}

@@ -3,7 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { ProfilesService } from './profiles.service';
 import { ProfilesResolver } from './profiles.resolver';
-import { ProfileSchema } from './profiles.entity';
+import { ProfileSchema } from '../../common/entity/profile.entity';
 import { UsersModule } from '../users/users.module';
 import { JwtModule } from '../systems/jwt/jwt.module';
 

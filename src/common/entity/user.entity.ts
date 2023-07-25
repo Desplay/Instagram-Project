@@ -2,6 +2,7 @@ import { Schema, Document, model } from 'mongoose';
 
 export interface User extends Document {
   deactive: boolean;
+  verify_account: boolean;
   username: string;
   email: string;
   password: string;
@@ -15,6 +16,7 @@ export interface User extends Document {
 
 export const UserSchema = new Schema<User>({
   deactive: { type: Boolean, required: true },
+  verify_account: { type: Boolean, required: true },
   username: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true, select: false },

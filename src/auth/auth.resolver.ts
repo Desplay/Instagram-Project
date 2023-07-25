@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { JWT } from './auth.dto';
+import { JWT } from '../common/dto/jwt.dto';
 
 @Resolver()
 export class AuthResolver {
@@ -35,5 +35,20 @@ export class AuthResolver {
   @Mutation(() => String)
   async resendOTPCode(@Args({ name: 'NameOrEmail', type: () => String }) NameOrEmail: string): Promise<string> {
     return await this.authService.resendOTPCode(NameOrEmail);
+  }
+
+  @Mutation(() => String)
+  async resetPassword(
+    @Args({ name: 'OTPCode', type: () => String }) OTPCode: string,
+    @Args({ name: 'password', type: () => String }) password: string,
+    @Context('req') req: Request,
+  ): Promise<string> {
+    const token = req.headers['access_token'];
+    return await this.authService.changePassword(token, OTPCode, password);
+  }
+
+  @Mutation(() => String)
+  async forgotPassword(@Args({ name: 'NameOrEmail', type: () => String }) NameOrEmail: string): Promise<string> {
+    return await this.authService.forgotPassword(NameOrEmail);
   }
 }

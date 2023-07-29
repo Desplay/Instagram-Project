@@ -5,7 +5,7 @@ import { MongooseModule as Mongoose } from '@nestjs/mongoose';
   imports: [
     Mongoose.forRootAsync({
       useFactory: () => ({
-        uri: process.env.MONGODB_URI,
+        uri: process.env.DATABASE_URL || process.env.MONGODB_URI,
       }),
     }),
   ],

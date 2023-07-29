@@ -26,10 +26,10 @@ export class ProfilesService {
     return await this.ProfileModel.findOne({ userId: id });
   }
 
-  async findAllProfileByName(name: string): Promise<Profile[]> {
+  async findAllProfileByName(profileName: string): Promise<Profile[]> {
     const profiles = await this.ProfileModel.find()
       .where('name')
-      .equals(name);
+      .equals(profileName);
     return profiles.length > 0 ? profiles : undefined;
   }
 

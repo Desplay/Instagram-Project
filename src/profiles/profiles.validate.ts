@@ -1,15 +1,16 @@
-// import { ForbiddenException, Injectable } from '@nestjs/common';
-// import { User } from 'src/users/datatype/user.entity';
-// import { UsersService } from '../users/users.service';
-// import { compareSync } from 'bcrypt';
-// import { ProfilesService } from '../profiles/profiles.service';
-// import { JwtService } from 'src/common/jwt/jwt.service';
+import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ProfilesService } from '../profiles/profiles.service';
 
-// @Injectable()
-// export class AuthErrorHanding {
-//   constructor(
-//     private readonly profilesService: ProfilesService,
-//     private readonly jwtService: JwtService,
-//   ) {}
-//     async validateUserExist(input: string): Promise<User> {
-// }
+@Injectable()
+export class ProfileErrorHanding {
+  constructor(private readonly profilesService: ProfilesService) {}
+  async validateProfileExist(user_id: string): Promise<boolean> {
+    if (!user_id) {
+      throw new ForbiddenException('User id is empty');
+    }
+    if (!(await this.profilesService.findProfile(user_id))) {
+      throw new ForbiddenException('Profile is not exist');
+    }
+    return true;
+  }
+}

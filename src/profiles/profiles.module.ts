@@ -9,6 +9,7 @@ import { JwtModule } from '../common/jwt/jwt.module';
 import { ProfilePipe } from './profiles.pipe';
 import { AuthModule } from 'src/auth/auth.module';
 import { AuthErrorHanding } from 'src/auth/auth.validate';
+import { ProfileErrorHanding } from './profiles.validate';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { AuthErrorHanding } from 'src/auth/auth.validate';
     ProfilesResolver,
     ProfilePipe,
     AuthErrorHanding,
+    ProfileErrorHanding,
   ],
-  exports: [ProfilesService],
+  exports: [ProfilesService, ProfileErrorHanding],
 })
 export class ProfilesModule {}

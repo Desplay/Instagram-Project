@@ -2,14 +2,14 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { User } from 'src/users/datatype/user.entity';
 import { UsersService } from '../users/users.service';
 import { compareSync } from 'bcrypt';
-import { ProfilesService } from '../profiles/profiles.service';
 import { JwtService } from 'src/common/jwt/jwt.service';
+import { ProfileErrorHanding } from 'src/profiles/profiles.validate';
 
 @Injectable()
 export class AuthErrorHanding {
   constructor(
     private readonly usersService: UsersService,
-    private readonly profilesService: ProfilesService,
+    private readonly profilesErrorHanding: ProfileErrorHanding,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -58,14 +58,10 @@ export class AuthErrorHanding {
   async validateSignUp(user_id: string): Promise<boolean> {
     if (!user_id) throw new ForbiddenException('User id is empty');
     const user_exist = await this.usersService.findOneUserById(user_id);
-    const profile_exist = await this.profilesService.findProfile(user_id);
     if (user_exist) {
       throw new ForbiddenException('User is exist');
     }
-    if (profile_exist) {
-      throw new ForbiddenException('Profile is exist');
-    }
-    return true;
+    return await this.profilesErrorHanding.validateProfileExist(user_id);
   }
 
   async validateAuthorization(header: any): Promise<string> {

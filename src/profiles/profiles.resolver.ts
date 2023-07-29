@@ -48,16 +48,16 @@ export class ProfilesResolver {
       throw new ForbiddenException('Profile not found');
     return await this.profileService.findProfile(user_id);
   }
+
   // @UseGuards(AuthGuard)
   // @Query(() => Profiles)
   // async findProfile(
   //   @Args({ name: 'profile_name', type: () => String }) name: string,
   //   @Context('req') req: Request,
   // ): Promise<Profiles> {
-  //   const payload = await this.jwtService.extractToken(
-  //     req.headers['access_token'],
+  //   const user_id = await this.authErrorHanding.validateAuthorization(
+  //     req.headers,
   //   );
-  //   const user_id = payload['user_id'];
   //   if (!(await this.profileService.findProfile(user_id)))
   //     throw new Error('Your profile is not created yet');
   //   const profiles_found = await this.profileService.findAllProfileByName(

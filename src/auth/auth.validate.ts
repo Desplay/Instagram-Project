@@ -59,11 +59,11 @@ export class AuthErrorHanding {
     if (!user_id) throw new ForbiddenException('User id is empty');
     const user_exist = await this.usersService.findOneUserById(user_id);
     const profile_exist = await this.profilesService.findProfile(user_id);
-    if (!user_exist) {
-      throw new ForbiddenException('User is not exist');
+    if (user_exist) {
+      throw new ForbiddenException('User is exist');
     }
-    if (!profile_exist) {
-      throw new ForbiddenException('Profile is not exist');
+    if (profile_exist) {
+      throw new ForbiddenException('Profile is exist');
     }
     return true;
   }

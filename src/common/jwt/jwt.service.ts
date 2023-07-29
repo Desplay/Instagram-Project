@@ -34,6 +34,9 @@ export class JwtService {
 
   async verifyToken(token: string): Promise<Payload> {
     const payload = await this.extractToken(token);
+    if (!payload) {
+      return undefined;
+    }
     const user = await this.usersService.findOneUserById(
       payload['user_id'],
     );

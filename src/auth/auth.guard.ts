@@ -21,7 +21,9 @@ export class AuthGuard implements CanActivate {
       getContext.req.headers,
     );
     if (!authorization) {
-      throw new UnauthorizedException('authorization header is required');
+      throw new UnauthorizedException(
+        'authorization header is required or invalid',
+      );
     }
     const valid_authorization =
       await this.authErrorHanding.validateUserExist(authorization.user_id);

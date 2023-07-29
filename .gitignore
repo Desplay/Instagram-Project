@@ -1,6 +1,6 @@
 # compiled output
-/dist
-/node_modules
+/dist/
+/node_modules/
 
 # Logs
 logs
@@ -38,5 +38,5 @@ lerna-debug.log*
 /note*
 /src/config/*.json
 /src/config/*.ts
-*.env
+# *.env
 test.*

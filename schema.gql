@@ -34,9 +34,14 @@ input ProfileInput {
   name: String!
 }
 
+type Profiles {
+  profiles: [Profile!]!
+}
+
 type Query {
   ShowProfile: Profile!
   SignIn(UserSignIn: UserSignIn!): Authorization!
+  findProfile(profile_name: String!): Profiles!
 }
 
 input UserSignIn {

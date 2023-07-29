@@ -44,6 +44,13 @@ export class ProfilesService {
     return update_profile_done ? true : false;
   }
 
+  filterProfile(profiles: Profile[], statusInput: boolean[]): Profile[] {
+    const filter_profiles = profiles.filter((profile, index) =>
+      !statusInput[index] === true ? profile : undefined,
+    );
+    return filter_profiles.length > 0 ? filter_profiles : undefined;
+  }
+
   async deleteProfile(id: string): Promise<boolean> {
     const profile = await this.ProfileModel.findOneAndRemove({ _id: id });
     return profile ? true : false;

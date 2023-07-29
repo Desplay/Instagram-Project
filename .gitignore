@@ -38,5 +38,5 @@ lerna-debug.log*
 /note*
 /src/config/*.json
 /src/config/*.ts
-*.env
+.env
 test.*

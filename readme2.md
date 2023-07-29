@@ -7,4 +7,4 @@
 
 [Nest](https://github.com/nestjs/nest)
 [NodeMailer](https://nodemailer.com/about/)
-[GoogleApis](https://console.cloud.google.com/welcome), [MongoDB]()
+[MongoDB]()

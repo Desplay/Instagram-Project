@@ -59,25 +59,34 @@ export class ProfilesResolver {
     return profile_exist;
   }
 
-  // @UseGuards(AuthGuard)
-  // @Query(() => Profiles)
-  // async findProfile(
-  //   @Args({ name: 'profile_name', type: () => String }) name: string,
-  //   @Context('req') req: Request,
-  // ): Promise<Profiles> {
-  //   const user_id = await this.authErrorHanding.validateAuthorization(
-  //     req.headers,
-  //   );
-  //   if (!(await this.profileService.findProfile(user_id)))
-  //     throw new Error('Your profile is not created yet');
-  //   const profiles_found = await this.profileService.findAllProfileByName(
-  //     name,
-  //   );
-  //   if (!profiles_found) throw new Error('Profile not found');
-  //   profiles_found.filter(async (profile) => {
-  //     return !(await this.userService.findOneUserById(profile.userId))
-  //       .deactive;
-  //   });
-  //   return { profiles: profiles_found };
-  // }
+  @UseGuards(AuthGuard)
+  @Query(() => Profiles)
+  async findProfile(
+    @Args({ name: 'profile_name', type: () => String }) name: string,
+    @Context('req') req: Request,
+  ): Promise<Profiles> {
+    const user_id = await this.authErrorHanding.validateAuthorization(
+      req.headers,
+    );
+    if (!(await this.profileService.findProfile(user_id)))
+      throw new ForbiddenException('Your profile is not created yet');
+    const profiles_found = await this.profileService.findAllProfileByName(
+      name,
+    );
+    if (!profiles_found) throw new ForbiddenException('Profile not found');
+    const user_status = [];
+    for (let i = 0; i < profiles_found.length; i++) {
+      const user = await this.userService.findOneUserById(
+        profiles_found[i].userId.toString(),
+      );
+      user_status.push(user.deactive);
+    }
+    const profiles_return = this.profileService.filterProfile(
+      profiles_found,
+      user_status,
+    );
+    if (!profiles_return)
+      throw new ForbiddenException('Profile not found');
+    return { profiles: profiles_return };
+  }
 }

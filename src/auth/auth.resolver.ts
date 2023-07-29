@@ -5,7 +5,7 @@ import { UserSignUp, UserSignIn } from 'src/users/datatype/user.dto';
 import { Authorization } from 'src/auth/datatype/auth.dto';
 import { AuthErrorHanding } from './auth.validate';
 import { ForbiddenException } from '@nestjs/common';
-import { JwtService } from 'src/common/jwt/jwt.service';
+import { Request } from 'express';
 
 @Resolver()
 export class AuthResolver {

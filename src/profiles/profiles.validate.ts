@@ -1,16 +1,18 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ProfilesService } from '../profiles/profiles.service';
+import { Profile } from './datatype/profile.entity';
 
 @Injectable()
 export class ProfileErrorHanding {
   constructor(private readonly profilesService: ProfilesService) {}
-  async validateProfileExist(user_id: string): Promise<boolean> {
+  async validateProfileExist(user_id: string): Promise<Profile> {
     if (!user_id) {
       throw new ForbiddenException('User id is empty');
     }
-    if (!(await this.profilesService.findProfile(user_id))) {
+    const profile_exist = await this.profilesService.findProfile(user_id);
+    if (!profile_exist) {
       throw new ForbiddenException('Profile is not exist');
     }
-    return true;
+    return profile_exist;
   }
 }

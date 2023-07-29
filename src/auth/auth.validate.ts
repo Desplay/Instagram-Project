@@ -4,6 +4,7 @@ import { UsersService } from '../users/users.service';
 import { compareSync } from 'bcrypt';
 import { JwtService } from 'src/common/jwt/jwt.service';
 import { ProfileErrorHanding } from 'src/profiles/profiles.validate';
+import { profile } from 'console';
 
 @Injectable()
 export class AuthErrorHanding {
@@ -61,7 +62,12 @@ export class AuthErrorHanding {
     if (user_exist) {
       throw new ForbiddenException('User is exist');
     }
-    return await this.profilesErrorHanding.validateProfileExist(user_id);
+    const profile_exist =
+      await this.profilesErrorHanding.validateProfileExist(user_id);
+    if (profile_exist) {
+      throw new ForbiddenException('Profile is exist');
+    }
+    return true;
   }
 
   async validateAuthorization(header: any): Promise<string> {

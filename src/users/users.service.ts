@@ -40,9 +40,8 @@ export class UsersService {
   }
 
   async updateUser(id: string, user: User): Promise<User> {
-    if (!(await this.UserModel.findById(id)))
-      throw new Error('User not found');
-    const newUser = await this.UserModel.findOneAndReplace(
+    if (!(await this.UserModel.findById(id))) return undefined;
+    const newUser = await this.UserModel.findOneAndUpdate(
       { _id: id },
       user,
     );

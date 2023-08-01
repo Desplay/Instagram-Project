@@ -18,7 +18,7 @@ import { ProfileErrorHanding } from './profiles.validate';
     ]),
     forwardRef(() => AuthModule),
     JwtModule,
-    UsersModule,
+    forwardRef(() => UsersModule),
   ],
   providers: [
     ProfilesService,

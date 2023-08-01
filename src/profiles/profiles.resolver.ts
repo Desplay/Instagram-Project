@@ -5,9 +5,9 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { ForbiddenException, UseGuards } from '@nestjs/common';
 import { ProfileInputPipe } from './profiles.pipe';
 import { AuthErrorHanding } from 'src/auth/auth.validate';
-import { Request } from 'express';
 import { ProfileErrorHanding } from './profiles.validate';
 import { UsersService } from 'src/users/users.service';
+import { Request } from 'express';
 
 @Resolver()
 export class ProfilesResolver {
@@ -31,11 +31,7 @@ export class ProfilesResolver {
     const user_id = await this.authErrorHanding.validateAuthorization(
       req.headers,
     );
-    const profile_exist =
-      await this.profileErrorHanding.validateProfileExist(user_id);
-    if (profile_exist) {
-      throw new ForbiddenException('Profile already exist');
-    }
+    await this.profileErrorHanding.validateProfileExist(user_id);
     const profile = await this.profileService.updateProfile(
       user_id,
       profileInput,
@@ -53,9 +49,6 @@ export class ProfilesResolver {
     );
     const profile_exist =
       await this.profileErrorHanding.validateProfileExist(user_id);
-    if (!profile_exist) {
-      throw new ForbiddenException('Profile is not exist');
-    }
     return profile_exist;
   }
 
@@ -68,8 +61,7 @@ export class ProfilesResolver {
     const user_id = await this.authErrorHanding.validateAuthorization(
       req.headers,
     );
-    if (!(await this.profileService.findProfile(user_id)))
-      throw new ForbiddenException('Your profile is not created yet');
+    await this.profileErrorHanding.validateProfileExist(user_id);
     const profiles_found = await this.profileService.findAllProfileByName(
       name,
     );

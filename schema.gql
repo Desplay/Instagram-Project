@@ -14,16 +14,18 @@ scalar DateTime
 type Mutation {
   SignUp(UserSignUp: UserSignUp!): Authorization!
   UpdateProfile(ProfileInput: ProfileInput!): String!
+  activeAccount: String!
   changePassword(OTPCode: String!, password: String!): String!
+  deactiveAccount: String!
   forgotPassword(NameOrEmail: String!): String!
   resendOTPCode(NameOrEmail: String!): String!
   verifyAccount(OTPCode: String!): String!
 }
 
 type Profile {
-  age: Int!
-  birthday: DateTime!
-  description: String!
+  age: Int
+  birthday: DateTime
+  description: String
   name: String!
 }
 

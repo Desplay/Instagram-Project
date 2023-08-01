@@ -4,7 +4,6 @@ import { UsersService } from '../users/users.service';
 import { compareSync } from 'bcrypt';
 import { JwtService } from 'src/common/jwt/jwt.service';
 import { ProfileErrorHanding } from 'src/profiles/profiles.validate';
-import { profile } from 'console';
 
 @Injectable()
 export class AuthErrorHanding {
@@ -35,7 +34,7 @@ export class AuthErrorHanding {
     return user;
   }
 
-  async validateUserSignIn(
+  async validateSignIn(
     NameOrEmail: string,
     password: string,
   ): Promise<User> {

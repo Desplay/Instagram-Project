@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 import { AuthResolver } from './auth.resolver';
@@ -11,7 +11,12 @@ import { AuthPipe } from './auth.pipe';
 import { AuthErrorHanding } from './auth.validate';
 
 @Module({
-  imports: [UsersModule, ProfilesModule, JwtModule, MailModule],
+  imports: [
+    UsersModule,
+    forwardRef(() => ProfilesModule),
+    JwtModule,
+    MailModule,
+  ],
   providers: [
     AuthService,
     AuthResolver,

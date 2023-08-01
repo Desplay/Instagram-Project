@@ -51,14 +51,13 @@ export class AuthService {
   }
 
   async SignIn(user: UserSignIn): Promise<Authorization> {
-    const user_exist = await this.authErrorHanding.validateUserSignIn(
+    const user_exist = await this.authErrorHanding.validateSignIn(
       user.NameOrEmail,
       user.password,
     );
     const user_id = await this.usersService.throwUserId(
       user_exist.username,
     );
-
     const payload = { user_id: user_id };
     const authorization = await this.jwtService.CreateToken(payload);
     return { authorization: authorization };

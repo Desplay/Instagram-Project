@@ -50,12 +50,9 @@ export class AuthResolver {
   @Mutation(() => String)
   async verifyAccount(
     @Args({ name: 'OTPCode', type: () => String }) OTPCode: string,
-    @Context('req') req: Request,
+    @Args({ name: 'email', type: () => String }) email: string,
   ): Promise<string> {
-    const token: string = req.headers['authorization'];
-    const user_id = await this.authErrorHanding.validateAuthorization(
-      token,
-    );
+    const user_id = await this.authService.getUserId(email);
     const verifyAccountDone = await this.authService.verifyAccount(
       user_id,
       OTPCode,
@@ -73,7 +70,14 @@ export class AuthResolver {
     @Args({ name: 'NameOrEmail', type: () => String })
     NameOrEmail: string,
   ): Promise<string> {
-    return await this.authService.resendOTPCode(NameOrEmail);
+    const status = await this.authService.resendOTPCode(NameOrEmail);
+    if (!status) {
+      throw new ForbiddenException(
+        'Resend OTPCode failed!, account not exist or allready verify',
+      );
+    }
+    const message = status;
+    return message;
   }
 
   @Mutation(() => String)

@@ -26,8 +26,8 @@ export class AuthErrorHanding {
 
   async validateUserExist(input: string): Promise<User> {
     const user =
-      (await this.usersService.findOneUserById(input)) ||
-      (await this.usersService.findOneUser(input));
+      (await this.usersService.findOneUser(input)) ||
+      (await this.usersService.findOneUserById(input));
     if (!user) {
       throw new ForbiddenException('User is not exist');
     }
@@ -58,13 +58,13 @@ export class AuthErrorHanding {
   async validateSignUp(user_id: string): Promise<boolean> {
     if (!user_id) throw new ForbiddenException('User id is empty');
     const user_exist = await this.usersService.findOneUserById(user_id);
-    if (user_exist) {
-      throw new ForbiddenException('User is exist');
+    if (!user_exist) {
+      throw new ForbiddenException('Sign up is not success');
     }
     const profile_exist =
       await this.profilesErrorHanding.validateProfileExist(user_id);
-    if (profile_exist) {
-      throw new ForbiddenException('Profile is exist');
+    if (!profile_exist) {
+      throw new ForbiddenException('Sign up is not success');
     }
     return true;
   }

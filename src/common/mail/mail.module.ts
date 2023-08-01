@@ -4,14 +4,16 @@ import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
-    MailerModule.forRoot({
-      transport: {
-        service: 'gmail',
-        auth: {
-          user: process.env.GGMAIL_USER,
-          pass: process.env.GGMAIL_PASS,
+    MailerModule.forRootAsync({
+      useFactory: () => ({
+        transport: {
+          service: 'gmail',
+          auth: {
+            user: process.env.GGMAIL_USER,
+            pass: process.env.GGMAIL_PASS,
+          },
         },
-      },
+      }),
     }),
   ],
   providers: [MailService],

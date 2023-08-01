@@ -79,6 +79,12 @@ export class AuthService {
     return { authorization: authorization };
   }
 
+  async getUserId(email: string): Promise<string> {
+    const user = await this.authErrorHanding.validateUserExist(email);
+    const user_id = await this.usersService.throwUserId(user.username);
+    return user_id;
+  }
+
   async verifyAccount(user_id: string, OTPCode: string): Promise<boolean> {
     const user = await this.authErrorHanding.validateUserExist(user_id);
     if (!this.authErrorHanding.validateOTPCode(OTPCode, user))
@@ -93,7 +99,7 @@ export class AuthService {
     const user = await this.authErrorHanding.validateUserExist(
       NameOrEmail,
     );
-    if (!user.verify_account) return undefined;
+    if (user.verify_account) return undefined;
     const user_id = await this.usersService.throwUserId(user.username);
     user.OTPCode = createOTPCode();
     await this.usersService.updateUser(user_id, user);

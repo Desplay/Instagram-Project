@@ -19,7 +19,7 @@ type Mutation {
   deactiveAccount: String!
   forgotPassword(NameOrEmail: String!): String!
   resendOTPCode(NameOrEmail: String!): String!
-  verifyAccount(OTPCode: String!): String!
+  verifyAccount(OTPCode: String!, email: String!): String!
 }
 
 type Profile {

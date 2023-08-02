@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Post } from 'src/posts/datatype/post.entity';
+import { Post, PostInput } from 'src/posts/datatype/post.dto';
 import { File } from 'src/common/cloudinary/datatype/file.entity';
 import { CloudinaryService } from '../common/cloudinary/cloudinary.service';
+import { PostTransformPipe } from './posts.pipe';
 
 @Injectable()
 export class PostsService {
@@ -12,51 +13,47 @@ export class PostsService {
     private readonly cloudService: CloudinaryService,
   ) {}
 
-  // async createPost(
-  //   post: Post,
-  //   file: File | null,
-  // ): Promise<Post | undefined> {
-  //   return undefined;
-  // if (file) {
-  //   const url = await this.cloudService.uploadFile(file, post._id);
-  //   if (!url) throw new Error('Upload file failed');
-  //   post.imageUrl = url;
-  // }
-  // const newPost = new this.PostModel(post);
-  // return await newPost.save();
-  // }
+  async createPost(post: PostInput, user_id: string): Promise<Post> {
+    const file = await post.Image;
+    const Post = new PostTransformPipe().transform(post);
+    Post.userId = user_id;
+    const newPost = new this.PostModel(Post);
+    const newPostId = newPost.id;
+    if (file) {
+      const url = await this.cloudService.uploadFile(file, newPostId);
+      if (!url) return undefined;
+      newPost.imageUrl = url;
+    }
+    return await newPost.save();
+  }
 
-  // async updatePost(
-  //   id: string,
-  //   post: any,
-  //   file: File | null,
-  // ): Promise<Post | undefined> {
-  //   if (file) {
-  //     if (!(await this.cloudService.deleteFile(id)))
-  //       throw new Error('Delete file failed');
-  //     const url = await this.cloudService.uploadFile(file, id);
-  //     post.imageUrl = url;
-  //   }
-  //   return await this.PostModel.findByIdAndUpdate(id, post, {
-  //     new: true,
-  //   }).exec();
-  // }
+  async updatePost(id: string, post: Post, file: File): Promise<Post> {
+    if (file) {
+      if (!(await this.cloudService.deleteFile(id))) {
+        return undefined;
+      }
+      const url = await this.cloudService.uploadFile(file, id);
+      post.imageUrl = url;
+    }
+    return await this.PostModel.findByIdAndUpdate(id, post);
+  }
 
-  // async deletePost(id: string): Promise<boolean> {
-  //   const post = await this.PostModel.findByIdAndDelete(id);
-  //   if (!post) return false;
-  //   if (await this.cloudService.deleteFile(id)) return true;
-  //   throw new Error('Delete file failed');
-  // }
+  async deletePost(id: string): Promise<boolean> {
+    const post = await this.PostModel.findByIdAndDelete(id);
+    if (!post) return false;
+    const status = await this.cloudService.deleteFile(id);
+    return status ? true : false;
+  }
 
-  // async findPost(id: string): Promise<Post | undefined> {
-  //   return await this.PostModel.findById(id).exec();
-  // }
+  async findPost(id: string): Promise<Post> {
+    return await this.PostModel.findById(id);
+  }
 
-  // async getAllPosts(user_id: string): Promise<Post[] | undefined> {
-  //   return await this.PostModel.find()
-  //     .where('userId')
-  //     .equals(user_id)
-  //     .exec();
-  // }
+  async getAllPosts(user_id: string): Promise<Post[]> {
+    const posts = await this.PostModel.find()
+      .where('userId')
+      .equals(user_id)
+      .exec();
+    return posts.length > 0 ? posts : undefined;
+  }
 }

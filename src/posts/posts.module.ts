@@ -8,6 +8,7 @@ import { CloudinaryModule } from '../common/cloudinary/cloudinary.module';
 import { AuthErrorHanding } from 'src/auth/auth.validate';
 import { UsersModule } from 'src/users/users.module';
 import { ProfilesModule } from 'src/profiles/profiles.module';
+import { PostPipe } from './posts.pipe';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ProfilesModule } from 'src/profiles/profiles.module';
     JwtModule,
     CloudinaryModule,
   ],
-  providers: [PostsService, PostsResolver, AuthErrorHanding],
+  providers: [PostsService, PostsResolver, AuthErrorHanding, PostPipe],
+  exports: [PostsService],
 })
 export class PostsModule {}

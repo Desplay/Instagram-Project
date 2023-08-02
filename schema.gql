@@ -16,10 +16,23 @@ type Mutation {
   UpdateProfile(ProfileInput: ProfileInput!): String!
   activeAccount: String!
   changePassword(OTPCode: String!, password: String!): String!
+  createPost(PostInput: PostInput!): String!
   deactiveAccount: String!
   forgotPassword(NameOrEmail: String!): String!
   resendOTPCode(NameOrEmail: String!): String!
   verifyAccount(OTPCode: String!, email: String!): String!
+}
+
+type Post {
+  content: String!
+  imageUrl: String
+  title: String!
+}
+
+input PostInput {
+  Image: Upload
+  content: String!
+  title: String!
 }
 
 type Profile {
@@ -45,6 +58,9 @@ type Query {
   SignIn(UserSignIn: UserSignIn!): Authorization!
   findProfile(profile_name: String!): Profiles!
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
 
 input UserSignIn {
   email: String

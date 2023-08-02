@@ -12,14 +12,13 @@ export class CloudinaryService {
     return new Promise((resolve, reject) =>
       stream
         .on('error', (error) => reject(error))
-        .on('common', (data) => buffer.push(data))
+        .on('data', (data) => buffer.push(data))
         .on('end', () => resolve(Buffer.concat(buffer))),
     );
   }
   async uploadFile(file: File, postID: string): Promise<string> {
-    file.filename = postID;
+    file.filename = `${postID}.${file.mimetype.split('.').pop()}`;
     const buffer = await this.streamToBuffer(file.createReadStream());
-    console.log(buffer);
     const result = await new Promise((resolve, reject) => {
       const upload = v2.uploader.upload_stream(
         { folder: 'nestjs_graphql_mongodb_basic' },

@@ -4,7 +4,7 @@ export interface Post {
   title: string;
   content: string;
   imageUrl: string;
-  userId: { type: Schema.Types.ObjectId; ref: 'User' };
+  userId: { type: Schema.Types.ObjectId; ref: 'User' } | string;
 }
 export interface PostEntity extends Post, Document {}
 

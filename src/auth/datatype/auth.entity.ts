@@ -1,7 +1,3 @@
-export interface Authorization {
-  authorization: string;
-}
-
 export interface UserSignIn {
   NameOrEmail: string;
   password: string;

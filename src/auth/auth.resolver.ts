@@ -1,9 +1,8 @@
 import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
-import { UserSignUpPipe, UserSignInPipe } from './auth.pipe';
 import { UserSignUp, UserSignIn } from 'src/users/datatype/user.dto';
-import { Authorization } from 'src/auth/datatype/auth.dto';
-import { AuthErrorHanding } from './auth.validate';
+import { AuthPayload } from 'src/auth/datatype/auth.dto';
+import { AuthErrorHanding } from './authValidate.service';
 import { ForbiddenException } from '@nestjs/common';
 import { Request } from 'express';
 
@@ -14,37 +13,31 @@ export class AuthResolver {
     private readonly authErrorHanding: AuthErrorHanding,
   ) {}
 
-  @Query(() => Authorization)
+  @Query(() => AuthPayload)
   async SignIn(
-    @Args(
-      { name: 'UserSignIn', type: () => UserSignIn },
-      new UserSignInPipe(),
-    )
+    @Args({ name: 'UserSignIn', type: () => UserSignIn })
     user: UserSignIn,
-  ): Promise<Authorization> {
+  ): Promise<AuthPayload> {
     const userTypeSignIn = {
       NameOrEmail: user.username ? user.username : user.email,
       password: user.password,
     };
-    const authorization = await this.authService.SignIn(userTypeSignIn);
-    return authorization;
+    const authPayload = await this.authService.SignIn(userTypeSignIn);
+    return authPayload;
   }
 
-  @Mutation(() => Authorization)
+  @Mutation(() => AuthPayload)
   async SignUp(
-    @Args(
-      { name: 'UserSignUp', type: () => UserSignUp },
-      new UserSignUpPipe(),
-    )
+    @Args({ name: 'UserSignUp', type: () => UserSignUp })
     user: UserSignUp,
-  ): Promise<Authorization> {
-    const token = await this.authService.SignUp(user);
-    if (!token) {
+  ): Promise<AuthPayload> {
+    const authPayload = await this.authService.SignUp(user);
+    if (!authPayload) {
       throw new ForbiddenException(
         'Sign up failed!, account already exist or invalid input type',
       );
     }
-    return token;
+    return authPayload;
   }
 
   @Mutation(() => String)
@@ -86,7 +79,7 @@ export class AuthResolver {
     @Args({ name: 'password', type: () => String }) password: string,
     @Context('req') req: Request,
   ): Promise<string> {
-    const user_id = await this.authErrorHanding.validateAuthorization(
+    const user_id = await this.authErrorHanding.getUserIdFromHeader(
       req.headers,
     );
     const verify = {

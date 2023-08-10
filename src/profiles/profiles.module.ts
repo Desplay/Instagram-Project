@@ -8,7 +8,7 @@ import { UsersModule } from '../users/users.module';
 import { JwtModule } from '../common/jwt/jwt.module';
 import { ProfilePipe } from './profiles.pipe';
 import { AuthModule } from 'src/auth/auth.module';
-import { AuthErrorHanding } from 'src/auth/auth.validate';
+import { AuthErrorHanding } from 'src/auth/authValidate.service';
 import { ProfileErrorHanding } from './profiles.validate';
 
 @Module({

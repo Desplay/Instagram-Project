@@ -4,7 +4,7 @@ import { Profile, ProfileInput, Profiles } from './datatype/profile.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { ForbiddenException, UseGuards } from '@nestjs/common';
 import { ProfileInputPipe } from './profiles.pipe';
-import { AuthErrorHanding } from 'src/auth/auth.validate';
+import { AuthErrorHanding } from 'src/auth/authValidate.service';
 import { ProfileErrorHanding } from './profiles.validate';
 import { UsersService } from 'src/users/users.service';
 import { Request } from 'express';
@@ -28,7 +28,7 @@ export class ProfilesResolver {
     profileInput: Profile,
     @Context('req') req: Request,
   ) {
-    const user_id = await this.authErrorHanding.validateAuthorization(
+    const user_id = await this.authErrorHanding.getUserIdFromHeader(
       req.headers,
     );
     await this.profileErrorHanding.validateProfileExist(user_id);
@@ -44,7 +44,7 @@ export class ProfilesResolver {
   @UseGuards(AuthGuard)
   @Query(() => Profile)
   async ShowProfile(@Context('req') req: Request) {
-    const user_id = await this.authErrorHanding.validateAuthorization(
+    const user_id = await this.authErrorHanding.getUserIdFromHeader(
       req.headers,
     );
     const profile_exist =
@@ -58,7 +58,7 @@ export class ProfilesResolver {
     @Args({ name: 'profile_name', type: () => String }) name: string,
     @Context('req') req: Request,
   ): Promise<Profiles> {
-    const user_id = await this.authErrorHanding.validateAuthorization(
+    const user_id = await this.authErrorHanding.getUserIdFromHeader(
       req.headers,
     );
     await this.profileErrorHanding.validateProfileExist(user_id);
@@ -68,7 +68,7 @@ export class ProfilesResolver {
     if (!profiles_found) throw new ForbiddenException('Profile not found');
     const user_status = [];
     for (let i = 0; i < profiles_found.length; i++) {
-      const user = await this.userService.findOneUserById(
+      const user = await this.userService.findOneUser(
         profiles_found[i].userId.toString(),
       );
       user_status.push(user.deactive);

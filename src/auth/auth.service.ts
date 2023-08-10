@@ -2,14 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { genSaltSync, hashSync } from 'bcrypt';
 import { JwtService } from 'src/common/jwt/jwt.service';
-import { Authorization, UserSignIn } from 'src/auth/datatype/auth.entity';
+import { UserSignIn } from 'src/auth/datatype/auth.entity';
 import { Profile } from 'src/profiles/datatype/profile.entity';
 import { MailService } from 'src/common/mail/mail.service';
 import { ProfilesService } from 'src/profiles/profiles.service';
-import { AuthErrorHanding } from './auth.validate';
+import { AuthErrorHanding } from './authValidate.service';
 import { UserSignUp } from 'src/users/datatype/user.dto';
 import { User } from 'src/users/datatype/user.entity';
 import createOTPCode from 'src/utils/otpcode.generate';
+import { AuthPayload } from './datatype/auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +22,7 @@ export class AuthService {
     private readonly authErrorHanding: AuthErrorHanding,
   ) {}
 
-  private async createUserType(user: UserSignUp): Promise<User> {
+  private async createUser(user: UserSignUp): Promise<User> {
     const user_exist =
       (await this.usersService.findOneUser(user.username)) ||
       (await this.usersService.findOneUser(user.email));
@@ -39,7 +40,7 @@ export class AuthService {
     return new_user;
   }
 
-  private createProfileType(user: UserSignUp): Profile {
+  private createEmptyProfile(user: UserSignUp): Profile {
     const new_profile: Profile = {
       name: user.username,
       birthday: null,
@@ -50,7 +51,7 @@ export class AuthService {
     return new_profile;
   }
 
-  async SignIn(user: UserSignIn): Promise<Authorization> {
+  async SignIn(user: UserSignIn): Promise<AuthPayload> {
     const user_exist = await this.authErrorHanding.validateSignIn(
       user.NameOrEmail,
       user.password,
@@ -59,24 +60,20 @@ export class AuthService {
       user_exist.username,
     );
     const payload = { user_id: user_id };
-    const authorization = await this.jwtService.CreateToken(payload);
-    return { authorization: authorization };
+    const token = await this.jwtService.CreateToken(payload);
+    return { token };
   }
 
-  async SignUp(user: UserSignUp): Promise<Authorization> {
-    const new_user = await this.createUserType(user);
+  async SignUp(user: UserSignUp): Promise<AuthPayload> {
+    const new_user = await this.createUser(user);
     if (!new_user) return undefined;
     const user_id = await this.usersService.createUser(new_user);
-    const new_profile = this.createProfileType(user);
+    const new_profile = this.createEmptyProfile(user);
     await this.profilesService.createProfile(new_profile, user_id);
-    const signUp_done = await this.authErrorHanding.validateSignUp(
-      user_id,
-    );
-    if (!signUp_done) return undefined;
     await this.mailService.sendMail(new_user.email, new_user.OTPCode.code);
     const payload = { user_id: user_id };
-    const authorization = await this.jwtService.CreateToken(payload);
-    return { authorization: authorization };
+    const token = await this.jwtService.CreateToken(payload);
+    return { token };
   }
 
   async getUserId(email: string): Promise<string> {

@@ -8,7 +8,6 @@ import toStream = require('buffer-to-stream');
 export class CloudinaryService {
   private async streamToBuffer(stream: Readable): Promise<Buffer> {
     const buffer: Uint8Array[] = [];
-    console.log(stream);
     return new Promise((resolve, reject) =>
       stream
         .on('error', (error) => reject(error))
@@ -17,13 +16,13 @@ export class CloudinaryService {
     );
   }
   async uploadFile(file: File, postID: string): Promise<string> {
-    file.filename = `${postID}.${file.mimetype.split('.').pop()}`;
+    file.filename = `${postID}.${file.filename.split('.').pop()}`;
     const buffer = await this.streamToBuffer(file.createReadStream());
-    const result = await new Promise((resolve, reject) => {
+    const result = await new Promise((resolve) => {
       const upload = v2.uploader.upload_stream(
-        { folder: 'nestjs_graphql_mongodb_basic' },
+        { folder: 'nestjs_graphql_mongodb_basic', public_id: postID },
         (error, result) => {
-          if (error) throw reject(error);
+          if (error) return undefined;
           resolve(result);
         },
       );
@@ -35,15 +34,14 @@ export class CloudinaryService {
 
   async deleteFile(postID: string): Promise<boolean> {
     try {
-      const response = await v2.api.resources({
-        type: 'upload',
-        prefix: 'nestjs_graphql_mongodb_basic',
-      });
+      const response = await v2.api.delete_resources(
+        [`nestjs_graphql_mongodb_basic/${postID}`],
+        { type: 'upload', resource_type: 'image' },
+      );
       const file = response.resources.find(
         (file: any) => file.public_id === postID,
       );
-      if (!file) return false;
-      await v2.uploader.destroy(file.public_id);
+      if (!file) return true;
       return true;
     } catch (error) {
       throw new Error(`Delete file failed, Error code: ${error.code}`);

@@ -15,22 +15,15 @@ export class FollowsService {
   async createFollowUser(
     user_id: string,
     user_follow: string,
-  ): Promise<Follow | undefined> {
+  ): Promise<Follow> {
     const user_not_found =
       !(await this.userService.findOneUser(user_id)) &&
       !(await this.userService.findOneUser(user_follow));
-    if (user_not_found) throw new Error('User not found');
-    const follow = await this.FollowModel.findOne({
-      userID: user_id,
+    if (user_not_found) return undefined;
+    const follow = new this.FollowModel({
+      user_id,
+      user_follow,
     });
-    if (!follow) {
-      const newFollow = new this.FollowModel({
-        userID: user_id,
-        followingId: [user_follow],
-      });
-      return await newFollow.save();
-    }
-    follow.followingId.push(user_follow);
     return await follow.save();
   }
 }

@@ -3,7 +3,7 @@ import { Context, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { Request } from 'express';
 import { UsersService } from './users.service';
-import { AuthErrorHanding } from 'src/auth/auth.validate';
+import { AuthErrorHanding } from 'src/auth/authValidate.service';
 
 @Resolver()
 export class UsersResolver {
@@ -15,7 +15,7 @@ export class UsersResolver {
   @UseGuards(AuthGuard)
   @Mutation(() => String)
   async deactiveAccount(@Context('req') req: Request): Promise<string> {
-    const user_id = await this.authErrorHanding.validateAuthorization(
+    const user_id = await this.authErrorHanding.getUserIdFromHeader(
       req.headers,
     );
     const user_exist = await this.authErrorHanding.validateUserExist(
@@ -40,7 +40,7 @@ export class UsersResolver {
   @UseGuards(AuthGuard)
   @Mutation(() => String)
   async activeAccount(@Context('req') req: Request): Promise<string> {
-    const user_id = await this.authErrorHanding.validateAuthorization(
+    const user_id = await this.authErrorHanding.getUserIdFromHeader(
       req.headers,
     );
     const user_exist = await this.authErrorHanding.validateUserExist(

@@ -2,8 +2,8 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Authorization {
-  authorization: String!
+type AuthPayload {
+  token: String!
 }
 
 """
@@ -12,19 +12,22 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Mutation {
-  SignUp(UserSignUp: UserSignUp!): Authorization!
+  SignUp(UserSignUp: UserSignUp!): AuthPayload!
   UpdateProfile(ProfileInput: ProfileInput!): String!
   activeAccount: String!
   changePassword(OTPCode: String!, password: String!): String!
   createPost(PostInput: PostInput!): String!
   deactiveAccount: String!
+  deletePost(id: String!): String!
   forgotPassword(NameOrEmail: String!): String!
   resendOTPCode(NameOrEmail: String!): String!
+  updatePost(PostInput: PostInput!, id: String!): Post!
   verifyAccount(OTPCode: String!, email: String!): String!
 }
 
 type Post {
   content: String!
+  id: String!
   imageUrl: String
   title: String!
 }
@@ -33,6 +36,10 @@ input PostInput {
   Image: Upload
   content: String!
   title: String!
+}
+
+type Posts {
+  posts: [String!]!
 }
 
 type Profile {
@@ -55,8 +62,10 @@ type Profiles {
 
 type Query {
   ShowProfile: Profile!
-  SignIn(UserSignIn: UserSignIn!): Authorization!
+  SignIn(UserSignIn: UserSignIn!): AuthPayload!
   findProfile(profile_name: String!): Profiles!
+  getAllPosts: Posts!
+  showPost(id: String!): Post!
 }
 
 """The `Upload` scalar type represents a file upload."""

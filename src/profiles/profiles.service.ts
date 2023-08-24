@@ -1,18 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Profile, ProfileEntity } from './datatype/profile.entity';
-import { ProfileInput } from './datatype/profile.dto';
+import {
+  Profile as ProfileInputEntity,
+  ProfileEntity,
+} from './datatype/profile.entity';
+import { Profile, ProfileInput, Profiles } from './datatype/profile.dto';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class ProfilesService {
   constructor(
     @InjectModel('Profile')
     private readonly ProfileModel: Model<ProfileEntity>,
+    private readonly userService: UsersService,
   ) {}
 
   async createProfile(
-    profileInput: Profile,
+    profileInput: ProfileInputEntity,
     user_id: string,
   ): Promise<boolean> {
     const newProfile = new this.ProfileModel({
@@ -26,11 +31,27 @@ export class ProfilesService {
     return await this.ProfileModel.findOne({ userId: id });
   }
 
-  async findAllProfileByName(profileName: string): Promise<Profile[]> {
-    const profiles = await this.ProfileModel.find()
+  async findAllProfileByName(profileName: string): Promise<Profiles> {
+    const profiles_found = await this.ProfileModel.find()
       .where('name')
       .equals(profileName);
-    return profiles.length > 0 ? profiles : undefined;
+    if (profiles_found.length === 0) return undefined;
+    const Profiles_filtered = [];
+    for await (const profile of profiles_found) {
+      const { userId } = profile;
+      const user_exist = await this.userService.findOneUser(
+        userId.toString(),
+      );
+      user_exist.deactive ? undefined : Profiles_filtered.push(profile);
+    }
+    const Profiles: Profiles = {
+      profiles: Profiles_filtered.map((profile) => {
+        const { _id, name, age, birthday, description } = profile;
+        const id: string = _id.toString();
+        return { id, name, age, birthday, description };
+      }),
+    };
+    return Profiles;
   }
 
   async updateProfile(
@@ -44,15 +65,13 @@ export class ProfilesService {
     return update_profile_done ? true : false;
   }
 
-  filterProfile(profiles: Profile[], statusInput: boolean[]): Profile[] {
-    const filter_profiles = profiles.filter((profile, index) =>
-      !statusInput[index] === true ? profile : undefined,
-    );
-    return filter_profiles.length > 0 ? filter_profiles : undefined;
-  }
-
   async deleteProfile(id: string): Promise<boolean> {
     const profile = await this.ProfileModel.findOneAndRemove({ _id: id });
     return profile ? true : false;
+  }
+
+  async throwUserIdFromProfile(id: string): Promise<string> {
+    const profile = await this.ProfileModel.findOne({ _id: id });
+    return profile ? profile.userId.toString() : undefined;
   }
 }

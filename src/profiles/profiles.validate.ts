@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ProfilesService } from '../profiles/profiles.service';
-import { Profile } from './datatype/profile.entity';
+import { Profile } from './datatype/profile.dto';
 
 @Injectable()
 export class ProfileErrorHanding {

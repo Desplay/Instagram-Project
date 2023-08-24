@@ -6,7 +6,6 @@ import { AuthGuard } from 'src/auth/auth.guard';
 
 import { PostInputPipe } from './posts.pipe';
 import { AuthErrorHanding } from 'src/auth/authValidate.service';
-import { file } from 'googleapis/build/src/apis/file';
 
 @UseGuards(AuthGuard)
 @Resolver()

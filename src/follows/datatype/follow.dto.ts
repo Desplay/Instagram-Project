@@ -2,5 +2,5 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class Follows {
-  @Field(() => [String]) id: string[];
+  @Field(() => [String]) profile_id: string[];
 }

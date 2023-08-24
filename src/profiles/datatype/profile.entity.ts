@@ -5,7 +5,7 @@ export interface Profile {
   birthday: Date;
   age: number;
   description: string;
-  userId: { type: Schema.Types.ObjectId; ref: 'User' } | string;
+  userId: { type: Schema.Types.ObjectId; ref: 'User' };
 }
 export interface ProfileEntity extends Profile, Document {}
 

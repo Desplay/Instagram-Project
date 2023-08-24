@@ -6,6 +6,9 @@ import { ProfilesModule } from './profiles/profiles.module';
 import { CommonModule } from './common/common.module';
 import { PostsModule } from './posts/posts.module';
 import { FollowsModule } from './follows/follows.module';
+import { CommentsModule } from './comments/comments.module';
+import { LikesModule } from './likes/likes.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -16,6 +19,9 @@ import { FollowsModule } from './follows/follows.module';
     ProfilesModule,
     CommonModule,
     PostsModule,
+    FollowsModule,
+    CommentsModule,
+    LikesModule,
   ],
 })
 export class AppModule {}

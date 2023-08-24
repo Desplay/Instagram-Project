@@ -6,21 +6,50 @@ type AuthPayload {
   token: String!
 }
 
+type Comment {
+  body: String!
+  created_at: DateTime!
+  id: String!
+  post_id: String!
+  reply_id: String
+  updated_at: DateTime!
+  user_id: String!
+}
+
+input CommentInput {
+  body: String!
+  post_id: String!
+  reCommentId: String!
+}
+
+type Comments {
+  comments: [Comment!]!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
 
+type Follows {
+  profile_id: [String!]!
+}
+
 type Mutation {
+  FollowProfile(profile_follow: String!): String!
   SignUp(UserSignUp: UserSignUp!): AuthPayload!
+  UnfollowProfile(profile_unfollow: String!): String!
   UpdateProfile(ProfileInput: ProfileInput!): String!
   activeAccount: String!
   changePassword(OTPCode: String!, password: String!): String!
+  commentInPost(Comment: CommentInput!): String!
   createPost(PostInput: PostInput!): String!
   deactiveAccount: String!
+  deleteComment(comment_id: String!): String!
   deletePost(id: String!): String!
   forgotPassword(NameOrEmail: String!): String!
   resendOTPCode(NameOrEmail: String!): String!
+  updateComment(body: String!, comment_id: String!): String!
   updatePost(PostInput: PostInput!, id: String!): Post!
   verifyAccount(OTPCode: String!, email: String!): String!
 }
@@ -46,6 +75,7 @@ type Profile {
   age: Int
   birthday: DateTime
   description: String
+  id: String!
   name: String!
 }
 
@@ -61,10 +91,14 @@ type Profiles {
 }
 
 type Query {
-  ShowProfile: Profile!
+  ShowMyProfile: Profile!
+  ShowProfile(user_id: String!): Profile!
   SignIn(UserSignIn: UserSignIn!): AuthPayload!
   findProfile(profile_name: String!): Profiles!
   getAllPosts: Posts!
+  getFollowing: Follows!
+  getUserFollowerMyProfile: Follows!
+  showComments(post_id: String!): Comments!
   showPost(id: String!): Post!
 }
 

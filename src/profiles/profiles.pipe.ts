@@ -8,16 +8,17 @@ import { ProfileInput } from './datatype/profile.dto';
 @Injectable()
 export class ProfileInputPipe implements PipeTransform {
   transform(value: ProfileInput): ProfileInput {
-    if (!value.name) {
+    const { name, birthday, age, description } = value;
+    if (!name) {
       throw new ForbiddenException('Name is required');
     }
-    if (!value.birthday) {
+    if (!birthday) {
       throw new ForbiddenException('Birthday is required');
     }
-    if (!value.age) {
+    if (!age) {
       throw new ForbiddenException('Age is required');
     }
-    if (!value.description) {
+    if (!description) {
       throw new ForbiddenException('Description is required');
     }
     return value;

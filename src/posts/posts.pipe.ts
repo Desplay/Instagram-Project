@@ -9,10 +9,11 @@ import { Post } from './datatype/post.entity';
 @Injectable()
 export class PostInputPipe implements PipeTransform {
   transform(value: PostInput): PostInput {
-    if (!value.title) {
+    const { title, content } = value;
+    if (!title) {
       throw new ForbiddenException('Title is required');
     }
-    if (!value.content) {
+    if (!content) {
       throw new ForbiddenException('Content is required');
     }
     return value;

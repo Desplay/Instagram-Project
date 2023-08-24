@@ -23,9 +23,7 @@ export class AuthService {
   ) {}
 
   private async createUser(user: UserSignUp): Promise<User> {
-    const user_exist =
-      (await this.usersService.findOneUser(user.username)) ||
-      (await this.usersService.findOneUser(user.email));
+    const user_exist = await this.usersService.findOneUser(user.email);
     if (user_exist) return undefined;
     const encodePassword = hashSync(user.password, genSaltSync());
     const OTPCode = createOTPCode();

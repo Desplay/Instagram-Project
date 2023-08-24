@@ -1,15 +1,23 @@
 import { Document, Schema, model } from 'mongoose';
 
 export interface Follow {
-  userID: string;
-  followingId: string;
+  userId: { type: Schema.Types.ObjectId; ref: 'User' };
+  followingByUserId: { type: Schema.Types.ObjectId; ref: 'User' };
   followAt: Date;
 }
 export interface FollowEntity extends Follow, Document {}
 
 export const FollowSchema = new Schema<Follow>({
-  userID: { type: String, required: true },
-  followingId: { type: String, required: true },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  followingByUserId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
   followAt: { type: Date, default: Date.now },
 });
 

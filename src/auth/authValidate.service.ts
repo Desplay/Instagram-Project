@@ -3,13 +3,11 @@ import { User } from 'src/users/datatype/user.entity';
 import { UsersService } from '../users/users.service';
 import { compareSync } from 'bcrypt';
 import { JwtService } from 'src/common/jwt/jwt.service';
-import { ProfileErrorHanding } from 'src/profiles/profiles.validate';
 
 @Injectable()
 export class AuthErrorHanding {
   constructor(
     private readonly usersService: UsersService,
-    private readonly profilesErrorHanding: ProfileErrorHanding,
     private readonly jwtService: JwtService,
   ) {}
 

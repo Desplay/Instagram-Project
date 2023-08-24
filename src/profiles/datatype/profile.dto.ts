@@ -1,7 +1,9 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
+import { IsNotEmpty } from 'class-validator';
 
 @ObjectType()
 export class Profile {
+  @Field(() => String) id: string;
   @Field(() => String) name: string;
   @Field(() => Date, { nullable: true }) birthday: Date;
   @Field(() => Int, { nullable: true }) age: number;
@@ -15,7 +17,10 @@ export class Profiles {
 
 @InputType()
 export class ProfileInput {
-  @Field(() => String) name: string;
+  @IsNotEmpty()
+  @Field(() => String)
+  name: string;
+
   @Field(() => Date) birthday: Date;
   @Field(() => Int) age: number;
   @Field(() => String) description: string;

@@ -6,28 +6,26 @@ import { ForbiddenException, UseGuards } from '@nestjs/common';
 import { ProfileInputPipe } from './profiles.pipe';
 import { AuthErrorHanding } from 'src/auth/authValidate.service';
 import { ProfileErrorHanding } from './profiles.validate';
-import { UsersService } from 'src/users/users.service';
 import { Request } from 'express';
-
 @Resolver()
 export class ProfilesResolver {
   constructor(
     private readonly profileService: ProfilesService,
     private readonly authErrorHanding: AuthErrorHanding,
     private readonly profileErrorHanding: ProfileErrorHanding,
-    private readonly userService: UsersService,
   ) {}
 
   @UseGuards(AuthGuard)
   @Mutation(() => String)
   async UpdateProfile(
     @Args(
-      { name: 'ProfileInput', type: () => ProfileInput },
+      'ProfileInput',
+      { type: () => ProfileInput },
       new ProfileInputPipe(),
     )
     profileInput: Profile,
     @Context('req') req: Request,
-  ) {
+  ): Promise<string> {
     const user_id = await this.authErrorHanding.getUserIdFromHeader(
       req.headers,
     );
@@ -41,9 +39,18 @@ export class ProfilesResolver {
     return message;
   }
 
+  @Query(() => Profile)
+  async ShowProfile(
+    @Args({ name: 'user_id', type: () => String }) user_id: string,
+  ): Promise<Profile> {
+    const profile = await this.profileService.findProfile(user_id);
+    if (!profile) throw new ForbiddenException('Profile not found');
+    return profile;
+  }
+
   @UseGuards(AuthGuard)
   @Query(() => Profile)
-  async ShowProfile(@Context('req') req: Request) {
+  async ShowMyProfile(@Context('req') req: Request): Promise<Profile> {
     const user_id = await this.authErrorHanding.getUserIdFromHeader(
       req.headers,
     );
@@ -66,19 +73,6 @@ export class ProfilesResolver {
       name,
     );
     if (!profiles_found) throw new ForbiddenException('Profile not found');
-    const user_status = [];
-    for (let i = 0; i < profiles_found.length; i++) {
-      const user = await this.userService.findOneUser(
-        profiles_found[i].userId.toString(),
-      );
-      user_status.push(user.deactive);
-    }
-    const profiles_return = this.profileService.filterProfile(
-      profiles_found,
-      user_status,
-    );
-    if (!profiles_return)
-      throw new ForbiddenException('Profile not found');
-    return { profiles: profiles_return };
+    return profiles_found;
   }
 }

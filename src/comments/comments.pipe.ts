@@ -13,7 +13,7 @@ export class CommentsPipe implements PipeTransform {
       postId: post_id,
       body,
       reCommentId: replyCommenId,
-      userId: '',
+      userId: null,
     };
   }
 }
@@ -33,7 +33,7 @@ export class CommentEntityToDTO implements PipeTransform {
     const newComment: CommentDTO = {
       id: _id.toString(),
       reply_id: reCommentId ? reCommentId.toString() : null,
-      post_id: postId ? postId.toString() : null,
+      post_id: postId.toString(),
       user_id: userId.toString(),
       body,
       created_at: createdAt,

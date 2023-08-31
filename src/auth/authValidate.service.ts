@@ -12,7 +12,7 @@ export class AuthErrorHanding {
   ) {}
 
   validateOTPCode(Code: string, user: User): boolean {
-    const OTPCode = user.OTPCode;
+    const { OTPCode } = user;
     const invalid_OTPCode =
       !OTPCode &&
       OTPCode.code !== Code &&

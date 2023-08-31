@@ -19,7 +19,7 @@ type Comment {
 input CommentInput {
   body: String!
   post_id: String!
-  reCommentId: String!
+  replyCommenId: String!
 }
 
 type Comments {
@@ -35,6 +35,16 @@ type Follows {
   profile_id: [String!]!
 }
 
+type Like {
+  createdAt: DateTime!
+  postId: String!
+  userIdLiked: String!
+}
+
+type Likes {
+  likes: [Like!]!
+}
+
 type Mutation {
   FollowProfile(profile_follow: String!): String!
   SignUp(UserSignUp: UserSignUp!): AuthPayload!
@@ -48,9 +58,11 @@ type Mutation {
   deleteComment(comment_id: String!): String!
   deletePost(id: String!): String!
   forgotPassword(NameOrEmail: String!): String!
+  likePost(PostId: String!): String!
   resendOTPCode(NameOrEmail: String!): String!
+  unlikePost(PostId: String!): String!
   updateComment(body: String!, comment_id: String!): String!
-  updatePost(PostInput: PostInput!, id: String!): Post!
+  updatePost(PostInput: PostInput!, id: String!): String!
   verifyAccount(OTPCode: String!, email: String!): String!
 }
 
@@ -97,6 +109,7 @@ type Query {
   findProfile(profile_name: String!): Profiles!
   getAllPosts: Posts!
   getFollowing: Follows!
+  getLikes(PostId: String!): Likes!
   getUserFollowerMyProfile: Follows!
   showComments(post_id: String!): Comments!
   showPost(id: String!): Post!

@@ -3,9 +3,9 @@ import { Args, Context, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { PostInput, Posts, Post } from 'src/posts/datatype/post.dto';
 import { PostsService } from './posts.service';
 import { AuthGuard } from 'src/auth/auth.guard';
-
 import { PostInputPipe } from './posts.pipe';
 import { AuthErrorHanding } from 'src/auth/authValidate.service';
+import { Request } from 'express';
 
 @UseGuards(AuthGuard)
 @Resolver()
@@ -23,8 +23,7 @@ export class PostsResolver {
       new PostInputPipe(),
     )
     post: PostInput,
-    @Context('req')
-    req: Request,
+    @Context('req') req: Request,
   ): Promise<string> {
     const user_id = await this.authErrorHanding.getUserIdFromHeader(
       req.headers,
@@ -38,7 +37,7 @@ export class PostsResolver {
   }
 
   @UseGuards(AuthGuard)
-  @Mutation(() => Post)
+  @Mutation(() => String)
   async updatePost(
     @Args({ name: 'id', type: () => String }) post_id: string,
     @Args(
@@ -46,8 +45,7 @@ export class PostsResolver {
       new PostInputPipe(),
     )
     post: PostInput,
-    @Context('req')
-    req: Request,
+    @Context('req') req: Request,
   ): Promise<string> {
     const user_id = await this.authErrorHanding.getUserIdFromHeader(
       req.headers,

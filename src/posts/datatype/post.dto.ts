@@ -6,7 +6,7 @@ export class Post {
   @Field(() => String) id: string;
   @Field(() => String) title: string;
   @Field(() => String) content: string;
-  @Field(() => String, { nullable: true }) imageUrl: string;
+  @Field(() => String, { nullable: true }) imageUrl?: string;
 }
 
 @ObjectType()

@@ -54,8 +54,7 @@ export class CommentsService {
   ): Promise<Comment> {
     const updatedComment = await this.CommentModel.findOneAndUpdate(
       { _id: comment_id, userId: user_id },
-      { body: body },
-      { new: true },
+      { body: body, updatedAt: Date.now() },
     );
     return updatedComment;
   }

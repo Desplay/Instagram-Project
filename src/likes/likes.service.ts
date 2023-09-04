@@ -30,7 +30,7 @@ export class LikesService {
     const likes = await this.LikeModel.find()
       .where('postId')
       .equals(postId);
-    if (likes.length === 0) return undefined;
+    if (likes.length === 0) return [];
     const new_likes: Like[] = [];
     likes.map((like) => {
       const new_like: Like = new LikesEntityToDTO().transform(like);

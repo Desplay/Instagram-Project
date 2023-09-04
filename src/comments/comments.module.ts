@@ -20,5 +20,6 @@ import { CommentsPipeModule } from './comments.pipe';
     ]),
   ],
   providers: [CommentsResolver, CommentsService, CommentsPipeModule],
+  exports: [CommentsService],
 })
 export class CommentsModule {}

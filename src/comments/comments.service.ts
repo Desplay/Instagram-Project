@@ -26,14 +26,14 @@ export class CommentsService {
     return comment;
   }
 
-  async findAllComments(post_id: string): Promise<Comments> {
+  async findAllComments(post_id: string): Promise<CommentDTO[]> {
     const comments = await this.CommentModel.find({ postId: post_id });
     const new_comments: CommentDTO[] = [];
     comments.map((comment) => {
       const newComment = new CommentEntityToDTO().transform(comment);
       new_comments.push(newComment);
     });
-    return { comments: new_comments };
+    return new_comments;
   }
 
   async deleteComment(

@@ -53,11 +53,11 @@ export class LikesResolver {
   }
 
   @Query(() => Likes)
-  async getLikes(
+  async getLikesDetail(
     @Args({ name: 'PostId', type: () => String }) post_id: string,
   ): Promise<Likes> {
     const likes = await this.likesService.getLikes(post_id);
-    if (!likes) {
+    if (likes.length === 0) {
       throw new ForbiddenException('No likes found');
     }
     return { likes };

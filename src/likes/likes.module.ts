@@ -15,5 +15,6 @@ import { LikeSchema } from './datatype/like.entity';
     MongooseModule.forFeature([{ name: 'Like', schema: LikeSchema }]),
   ],
   providers: [LikesService, LikesResolver],
+  exports: [LikesService],
 })
 export class LikesModule {}

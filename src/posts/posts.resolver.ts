@@ -14,7 +14,7 @@ import { LikesService } from 'src/likes/likes.service';
 export class PostsResolver {
   constructor(
     private readonly postSevice: PostsService,
-    private readonly commentService: CommentsService,
+    private readonly commentsService: CommentsService,
     private readonly likesService: LikesService,
     private readonly authErrorHanding: AuthErrorHanding,
   ) {}
@@ -89,7 +89,7 @@ export class PostsResolver {
     if (!posts) {
       throw new ForbiddenException('This profile has no posts');
     }
-    const newPostsDetail: Posts = { posts: [] };
+    const newPostsDetail = [];
     for await (const post of posts) {
       const { id, title, content, imageUrl } = post;
       const likes = await this.likesService.getLikes(post.id);
@@ -98,11 +98,11 @@ export class PostsResolver {
         title,
         content,
         imageUrl,
-        comments: await this.commentService.findAllComments(post.id),
+        comments: await this.commentsService.findAllComments(post.id),
         likesCount: likes.length,
       };
-      newPostsDetail.posts.push(new_post);
+      newPostsDetail.push(new_post);
     }
-    return newPostsDetail;
+    return { posts: newPostsDetail };
   }
 }

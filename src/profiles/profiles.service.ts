@@ -27,8 +27,18 @@ export class ProfilesService {
     return newProfile ? true : false;
   }
 
-  async findProfile(id: string): Promise<Profile> {
-    return await this.ProfileModel.findOne({ userId: id });
+  async findProfile(user_id: string): Promise<Profile> {
+    const profile_found = await this.ProfileModel.findOne({
+      userId: user_id,
+    });
+    const { _id, name, age, birthday, description } = profile_found;
+    return {
+      id: _id.toString(),
+      name,
+      age,
+      birthday,
+      description,
+    };
   }
 
   async findAllProfileByName(profileName: string): Promise<Profiles> {

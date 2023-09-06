@@ -5,12 +5,14 @@ import { LikesService } from './likes.service';
 import { Request } from 'express';
 import { AuthErrorHanding } from 'src/auth/authValidate.service';
 import { Likes } from './datatype/like.dto';
+import { NotificationsService } from 'src/notifications/notifications.service';
 
 @UseGuards(AuthGuard)
 @Resolver()
 export class LikesResolver {
   constructor(
     private readonly likesService: LikesService,
+    private readonly notificationsService: NotificationsService,
     private readonly authErrorHanding: AuthErrorHanding,
   ) {}
 
@@ -29,6 +31,10 @@ export class LikesResolver {
     if (!like_created) {
       throw new ForbiddenException('Like creation failed');
     }
+    await this.notificationsService.createNotificationForNewLike(
+      user_id_liked,
+      post_id,
+    );
     const message = 'Like created successfully';
     return message;
   }

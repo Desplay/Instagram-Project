@@ -11,6 +11,7 @@ import { ProfilesModule } from 'src/profiles/profiles.module';
 import { PostPipe } from './posts.pipe';
 import { CommentsModule } from 'src/comments/comments.module';
 import { LikesModule } from 'src/likes/likes.module';
+import { NotificationsModule } from 'src/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { LikesModule } from 'src/likes/likes.module';
     UsersModule,
     ProfilesModule,
     LikesModule,
+    NotificationsModule,
     MongooseModule.forFeature([{ name: 'Post', schema: PostSchema }]),
     JwtModule,
     CloudinaryModule,

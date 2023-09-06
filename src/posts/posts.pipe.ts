@@ -26,7 +26,7 @@ export class PostDTOToEntity implements PipeTransform {
     const newValue = {
       title: value.title,
       content: value.content,
-      imageUrl: '',
+      imageUrl: null,
       userId: '',
     };
     return newValue;

@@ -49,11 +49,14 @@ export class PostsService {
   async deletePost(id: string): Promise<boolean> {
     const post = await this.PostModel.findByIdAndDelete(id);
     if (!post) return false;
-    const status = await this.cloudService.deleteFile(id);
-    return status ? true : false;
+    if (post.imageUrl) {
+      const status = await this.cloudService.deleteFile(id);
+      return status ? true : false;
+    }
+    return true;
   }
 
-  async findPost(id: string): Promise<PostDTO> {
+  async findPost(id: string): Promise<PostEntity> {
     return await this.PostModel.findById(id);
   }
 

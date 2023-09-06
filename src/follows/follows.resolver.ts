@@ -40,7 +40,7 @@ export class FollowsResolver {
     const user_id = await this.authErrorHanding.getUserIdFromHeader(
       req.headers,
     );
-    const follows = await this.followsService.findFollowingInProfileId(
+    const follows = await this.followsService.findFollowingInUserId(
       user_id,
     );
     if (!follows) {
@@ -57,7 +57,7 @@ export class FollowsResolver {
     const user_id = await this.authErrorHanding.getUserIdFromHeader(
       req.headers,
     );
-    const follows = await this.followsService.findFollowerInProfileId(
+    const follows = await this.followsService.findFollowerInUserId(
       user_id,
     );
     if (!follows) {

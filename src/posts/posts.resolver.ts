@@ -8,6 +8,7 @@ import { AuthErrorHanding } from 'src/auth/authValidate.service';
 import { Request } from 'express';
 import { CommentsService } from 'src/comments/comments.service';
 import { LikesService } from 'src/likes/likes.service';
+import { NotificationsService } from 'src/notifications/notifications.service';
 
 @UseGuards(AuthGuard)
 @Resolver()
@@ -16,6 +17,7 @@ export class PostsResolver {
     private readonly postSevice: PostsService,
     private readonly commentsService: CommentsService,
     private readonly likesService: LikesService,
+    private readonly notificationService: NotificationsService,
     private readonly authErrorHanding: AuthErrorHanding,
   ) {}
 
@@ -36,6 +38,7 @@ export class PostsResolver {
     if (!post_created) {
       throw new ForbiddenException('Post creation failed');
     }
+    await this.notificationService.createNotificationForNewPost(user_id);
     const message = 'Post created successfully';
     return message;
   }

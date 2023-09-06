@@ -102,7 +102,7 @@ type Profiles {
 
 type Query {
   ShowMyProfile: Profile!
-  ShowProfile(user_id: String!): Profile!
+  ShowProfile(profile_id: String!): Profile!
   SignIn(UserSignIn: UserSignIn!): AuthPayload!
   findProfile(profile_name: String!): Profiles!
   getAllPosts: Posts!

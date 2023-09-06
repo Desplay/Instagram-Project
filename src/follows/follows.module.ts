@@ -16,5 +16,6 @@ import { ProfilesModule } from 'src/profiles/profiles.module';
     ProfilesModule,
   ],
   providers: [FollowsService, FollowsResolver, AuthErrorHanding],
+  exports: [FollowsService],
 })
 export class FollowsModule {}

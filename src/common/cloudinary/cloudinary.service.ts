@@ -33,18 +33,14 @@ export class CloudinaryService {
   }
 
   async deleteFile(postID: string): Promise<boolean> {
-    try {
-      const response = await v2.api.delete_resources(
-        [`nestjs_graphql_mongodb_basic/${postID}`],
-        { type: 'upload', resource_type: 'image' },
-      );
-      const file = response.resources.find(
-        (file: any) => file.public_id === postID,
-      );
-      if (!file) return true;
-      return true;
-    } catch (error) {
-      throw new Error(`Delete file failed, Error code: ${error.code}`);
-    }
+    const file_exists = await v2.api.resource(
+      `nestjs_graphql_mongodb_basic/${postID}`,
+    );
+    if (!file_exists) return false;
+    const response = await v2.api.delete_resources([
+      `nestjs_graphql_mongodb_basic/${postID}`,
+    ]);
+    if (!response) return false;
+    return true;
   }
 }

@@ -5,6 +5,7 @@ import { AuthErrorHanding } from 'src/auth/authValidate.service';
 import { CommentInput } from './datatype/comment.dto';
 import { CommentsService } from './comments.service';
 import { CommentsPipe } from './comments.pipe';
+import { NotificationsService } from 'src/notifications/notifications.service';
 import { Request } from 'express';
 
 @Resolver()
@@ -12,6 +13,7 @@ export class CommentsResolver {
   constructor(
     private readonly commentsService: CommentsService,
     private readonly authErrorHanding: AuthErrorHanding,
+    private readonly notificationService: NotificationsService,
   ) {}
 
   @UseGuards(AuthGuard)
@@ -39,6 +41,10 @@ export class CommentsResolver {
       user_id,
     );
     if (!newComment) throw new ForbiddenException('Comment failed');
+    await this.notificationService.createNotificationForNewComment(
+      user_id,
+      newComment.postId.toString(),
+    );
     const message = 'Comment successfully';
     return message;
   }

@@ -9,11 +9,17 @@ import { AuthErrorHanding } from 'src/auth/authValidate.service';
 import { UsersModule } from 'src/users/users.module';
 import { ProfilesModule } from 'src/profiles/profiles.module';
 import { PostPipe } from './posts.pipe';
+import { CommentsModule } from 'src/comments/comments.module';
+import { LikesModule } from 'src/likes/likes.module';
+import { NotificationsModule } from 'src/notifications/notifications.module';
 
 @Module({
   imports: [
+    CommentsModule,
     UsersModule,
     ProfilesModule,
+    LikesModule,
+    NotificationsModule,
     MongooseModule.forFeature([{ name: 'Post', schema: PostSchema }]),
     JwtModule,
     CloudinaryModule,

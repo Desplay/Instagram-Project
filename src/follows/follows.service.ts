@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Follow } from 'src/follows/datatype/follow.entity';
+import { FollowEntity } from 'src/follows/datatype/follow.entity';
 import { ProfilesService } from 'src/profiles/profiles.service';
 
 @Injectable()
 export class FollowsService {
   constructor(
     @InjectModel('Follow')
-    private readonly FollowModel: Model<Follow>,
+    private readonly FollowModel: Model<FollowEntity>,
     private readonly profileService: ProfilesService,
   ) {}
 
@@ -33,7 +33,7 @@ export class FollowsService {
     return follow ? true : false;
   }
 
-  async findFollowerInProfileId(user_id: string): Promise<string[]> {
+  async findFollowerInUserId(user_id: string): Promise<string[]> {
     const follows = await this.FollowModel.find()
       .where('userId')
       .equals(user_id);
@@ -48,7 +48,7 @@ export class FollowsService {
     return follows_filtered;
   }
 
-  async findFollowingInProfileId(user_id: string): Promise<string[]> {
+  async findFollowingInUserId(user_id: string): Promise<string[]> {
     const follows = await this.FollowModel.find()
       .where('followingByUserId')
       .equals(user_id);

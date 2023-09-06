@@ -3,7 +3,7 @@ import {
   Injectable,
   PipeTransform,
 } from '@nestjs/common';
-import { PostInput } from './datatype/post.dto';
+import { PostInput, PostDTO } from './datatype/post.dto';
 import { Post } from './datatype/post.entity';
 
 @Injectable()
@@ -21,13 +21,26 @@ export class PostInputPipe implements PipeTransform {
 }
 
 @Injectable()
-export class PostTransformPipe implements PipeTransform {
+export class PostDTOToEntity implements PipeTransform {
   transform(value: PostInput): Post {
     const newValue = {
       title: value.title,
       content: value.content,
-      imageUrl: '',
+      imageUrl: null,
       userId: '',
+    };
+    return newValue;
+  }
+}
+
+@Injectable()
+export class PostEntityToDTO implements PipeTransform {
+  transform(value: any): PostDTO {
+    const newValue = {
+      id: value._id,
+      title: value.title,
+      content: value.content,
+      imageUrl: value.imageUrl,
     };
     return newValue;
   }
@@ -35,5 +48,5 @@ export class PostTransformPipe implements PipeTransform {
 
 export class PostPipe {
   static PostInputPipe = PostInputPipe;
-  static PostTransformPipe = PostTransformPipe;
+  static PostDTOToEntity = PostDTOToEntity;
 }

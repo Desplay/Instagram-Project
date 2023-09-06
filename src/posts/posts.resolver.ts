@@ -1,17 +1,23 @@
 import { ForbiddenException, UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver, Query } from '@nestjs/graphql';
-import { PostInput, Posts, Post } from 'src/posts/datatype/post.dto';
+import { PostInput, Posts } from 'src/posts/datatype/post.dto';
 import { PostsService } from './posts.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { PostInputPipe } from './posts.pipe';
 import { AuthErrorHanding } from 'src/auth/authValidate.service';
 import { Request } from 'express';
+import { CommentsService } from 'src/comments/comments.service';
+import { LikesService } from 'src/likes/likes.service';
+import { NotificationsService } from 'src/notifications/notifications.service';
 
 @UseGuards(AuthGuard)
 @Resolver()
 export class PostsResolver {
   constructor(
     private readonly postSevice: PostsService,
+    private readonly commentsService: CommentsService,
+    private readonly likesService: LikesService,
+    private readonly notificationService: NotificationsService,
     private readonly authErrorHanding: AuthErrorHanding,
   ) {}
 
@@ -32,6 +38,7 @@ export class PostsResolver {
     if (!post_created) {
       throw new ForbiddenException('Post creation failed');
     }
+    await this.notificationService.createNotificationForNewPost(user_id);
     const message = 'Post created successfully';
     return message;
   }
@@ -76,18 +83,6 @@ export class PostsResolver {
   }
 
   @UseGuards(AuthGuard)
-  @Query(() => Post)
-  async showPost(
-    @Args({ name: 'id', type: () => String }) id: string,
-  ): Promise<Post> {
-    const post = await this.postSevice.findPost(id);
-    if (!post) {
-      throw new ForbiddenException('Post not found');
-    }
-    return post;
-  }
-
-  @UseGuards(AuthGuard)
   @Query(() => Posts)
   async getAllPosts(@Context('req') req: Request): Promise<Posts> {
     const user_id = await this.authErrorHanding.getUserIdFromHeader(
@@ -97,6 +92,20 @@ export class PostsResolver {
     if (!posts) {
       throw new ForbiddenException('This profile has no posts');
     }
-    return posts;
+    const newPostsDetail = [];
+    for await (const post of posts) {
+      const { id, title, content, imageUrl } = post;
+      const likes = await this.likesService.getLikes(post.id);
+      const new_post = {
+        id,
+        title,
+        content,
+        imageUrl,
+        comments: await this.commentsService.findAllComments(post.id),
+        likesCount: likes.length,
+      };
+      newPostsDetail.push(new_post);
+    }
+    return { posts: newPostsDetail };
   }
 }

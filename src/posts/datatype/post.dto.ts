@@ -1,8 +1,9 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { GraphQLUpload, FileUpload } from 'graphql-upload';
+import { Comment } from 'src/comments/datatype/comment.dto';
 
 @ObjectType()
-export class Post {
+export class PostDTO {
   @Field(() => String) id: string;
   @Field(() => String) title: string;
   @Field(() => String) content: string;
@@ -10,8 +11,13 @@ export class Post {
 }
 
 @ObjectType()
+export class Post extends PostDTO {
+  @Field(() => [Comment]) comments: Comment[];
+  @Field(() => Number) likesCount: number;
+}
+@ObjectType()
 export class Posts {
-  @Field(() => [String]) posts: string[];
+  @Field(() => [Post]) posts: Post[];
 }
 
 @InputType()

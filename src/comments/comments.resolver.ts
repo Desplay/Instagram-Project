@@ -1,10 +1,11 @@
 import { ForbiddenException, UseGuards } from '@nestjs/common';
-import { Args, Context, Mutation, Resolver, Query } from '@nestjs/graphql';
+import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { AuthErrorHanding } from 'src/auth/authValidate.service';
-import { CommentInput, Comments } from './datatype/comment.dto';
+import { CommentInput } from './datatype/comment.dto';
 import { CommentsService } from './comments.service';
 import { CommentsPipe } from './comments.pipe';
+import { NotificationsService } from 'src/notifications/notifications.service';
 import { Request } from 'express';
 
 @Resolver()
@@ -12,6 +13,7 @@ export class CommentsResolver {
   constructor(
     private readonly commentsService: CommentsService,
     private readonly authErrorHanding: AuthErrorHanding,
+    private readonly notificationService: NotificationsService,
   ) {}
 
   @UseGuards(AuthGuard)
@@ -39,17 +41,12 @@ export class CommentsResolver {
       user_id,
     );
     if (!newComment) throw new ForbiddenException('Comment failed');
+    await this.notificationService.createNotificationForNewComment(
+      user_id,
+      newComment.postId.toString(),
+    );
     const message = 'Comment successfully';
     return message;
-  }
-
-  @Query(() => Comments)
-  async showComments(
-    @Args({ name: 'post_id', type: () => String }) post_id: string,
-  ): Promise<Comments> {
-    const comments = await this.commentsService.findAllComments(post_id);
-    if (!comments) throw new ForbiddenException('Comments not found');
-    return comments;
   }
 
   @UseGuards(AuthGuard)

@@ -41,9 +41,9 @@ export class ProfilesResolver {
 
   @Query(() => Profile)
   async ShowProfile(
-    @Args({ name: 'user_id', type: () => String }) user_id: string,
+    @Args({ name: 'profile_id', type: () => String }) profile_id: string,
   ): Promise<Profile> {
-    const profile = await this.profileService.findProfile(user_id);
+    const profile = await this.profileService.findProfile(profile_id);
     if (!profile) throw new ForbiddenException('Profile not found');
     return profile;
   }

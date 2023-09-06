@@ -1,38 +1,40 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Post, PostInput, Posts } from 'src/posts/datatype/post.dto';
+import { PostDTO, PostInput } from 'src/posts/datatype/post.dto';
+import { PostEntity } from './datatype/post.entity';
 import { CloudinaryService } from '../common/cloudinary/cloudinary.service';
-import { PostTransformPipe } from './posts.pipe';
+import { PostDTOToEntity } from './posts.pipe';
 
 @Injectable()
 export class PostsService {
   constructor(
-    @InjectModel('Post') private readonly PostModel: Model<Post>,
+    @InjectModel('Post') private readonly PostModel: Model<PostEntity>,
     private readonly cloudService: CloudinaryService,
   ) {}
 
-  async createPost(post: PostInput, user_id: string): Promise<Post> {
+  async createPost(post: PostInput, user_id: string): Promise<boolean> {
     const file = await post.Image;
-    const Post = new PostTransformPipe().transform(post);
+    const Post = new PostDTOToEntity().transform(post);
     Post.userId = user_id;
     const newPost = await new this.PostModel(Post).save();
-    const newPostId = newPost.id;
+    const newPostId = newPost._id.toString();
     if (file) {
       const url = await this.cloudService.uploadFile(file, newPostId);
-      if (!url) return undefined;
+      if (!url) return false;
       newPost.imageUrl = url;
     }
-    return await newPost.save();
+    await newPost.save();
+    return true;
   }
 
   async updatePost(
     user_id: string,
     post_id: string,
     post: PostInput,
-  ): Promise<Post> {
+  ): Promise<PostDTO> {
     const file = await post.Image;
-    const new_post = new PostTransformPipe().transform(post);
+    const new_post = new PostDTOToEntity().transform(post);
     new_post.userId = user_id;
     if (file) {
       if (!(await this.cloudService.deleteFile(post_id))) {
@@ -47,22 +49,26 @@ export class PostsService {
   async deletePost(id: string): Promise<boolean> {
     const post = await this.PostModel.findByIdAndDelete(id);
     if (!post) return false;
-    const status = await this.cloudService.deleteFile(id);
-    return status ? true : false;
+    if (post.imageUrl) {
+      const status = await this.cloudService.deleteFile(id);
+      return status ? true : false;
+    }
+    return true;
   }
 
-  async findPost(id: string): Promise<Post> {
+  async findPost(id: string): Promise<PostEntity> {
     return await this.PostModel.findById(id);
   }
 
-  async getAllPosts(user_id: string): Promise<Posts> {
-    const posts = await this.PostModel.find()
+  async getAllPosts(user_id: string): Promise<PostDTO[]> {
+    const posts_found = await this.PostModel.find()
       .where('userId')
       .equals(user_id);
-    if (posts.length === 0) return undefined;
-    const posts_type: string[] = posts.map((post) => {
-      return post.id;
+    if (posts_found.length === 0) return undefined;
+    const posts = posts_found.map((post) => {
+      const { _id, title, content, imageUrl } = post;
+      return { id: _id.toString(), title, content, imageUrl };
     });
-    return { posts: posts_type };
+    return posts;
   }
 }

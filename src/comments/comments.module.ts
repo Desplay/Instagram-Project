@@ -8,6 +8,7 @@ import { ProfilesModule } from 'src/profiles/profiles.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { JwtModule } from 'src/common/jwt/jwt.module';
 import { CommentsPipeModule } from './comments.pipe';
+import { NotificationsModule } from 'src/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -15,10 +16,12 @@ import { CommentsPipeModule } from './comments.pipe';
     ProfilesModule,
     AuthModule,
     JwtModule,
+    NotificationsModule,
     MongooseModule.forFeature([
       { name: 'Comment', schema: CommentSchema },
     ]),
   ],
   providers: [CommentsResolver, CommentsService, CommentsPipeModule],
+  exports: [CommentsService],
 })
 export class CommentsModule {}

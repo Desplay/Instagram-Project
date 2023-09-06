@@ -4,7 +4,8 @@
 
 _Basic Instagram operating model_
 
-<p> Project using <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building server-side applications. coding by <a href="https://github.com/Desplay" targer="_blank">Desplay</a></p>
+<p> Project using <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building server-side applications. coding by <a href="https://github.com/Desplay" targer="_blank">Desplay</a>
+</p>
 
 </div>
 
@@ -31,7 +32,7 @@ _Basic Instagram operating model_
 
 <div align="center">
 
-<img src="./doc/image/Model.png">
+<img src="./docs/images/Model.png">
 
 </div>
 
@@ -55,27 +56,33 @@ _Basic Instagram operating model_
 
 # Guide to use
 
-## Clone project
+## Basic
 
-```bash
-git clone https://github.com/Desplay/NestJS_MongoDB_GraphQL_Basic.git
-```
+- ### 1. Clone project
 
-## Install dependencies
+  ```bash
+  git clone https://github.com/Desplay/NestJS_MongoDB_GraphQL_Basic.git
+  ```
 
-```bash
-npm install --force
-```
+- ### 2. Install dependencies
 
-## Run project
+  ```bash
+  npm install --force
+  ```
 
-```bash
-npm run start:dev
-```
+- ### 3. Run project
+
+  ```bash
+  npm run start:dev
+  ```
+
+## More guide ?
+
+  [here !](./docs/guide.md)
 
 # License
 
-[MIT licensed](LICENSE).
+- [MIT licensed](LICENSE)
 
 # Contact
 

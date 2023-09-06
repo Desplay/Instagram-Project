@@ -1,11 +1,36 @@
-<p align="center">
-    <img src="https://drive.google.com/uc?export=view&id=1frXwp9PixpC0mE6UtaUp_RqooUkUFuA6" width="200" alt="Project Logo">
-</p>
-  <p align="center">A basic project using <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building server-side applications. coding by <a href="https://github.com/Desplay" targer="_blank">Desplay</a></p>
+<div align="center">
 
-## Description
+# Instagram Project
+*Basic Instagram operating model*
 
-### Modules
+</div>
+
+<p> Project using <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building server-side applications. coding by <a href="https://github.com/Desplay" targer="_blank">Desplay</a></p>
+
+
+# Use
+
+<div align="center">
+
+![NestJS](https://img.shields.io/badge/nestjs-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+![GraphQL](https://img.shields.io/badge/GraphQl-E10098?style=for-the-badge&logo=graphql&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+
+<div>
+
+# Highlights
+
+- Using Nesjs framework, GraphQL, MongoDB, easy to use and develop
+- Basic SignIn, SignUp Account, password is encrypted
+- Upload file to Cloudinary
+- Send email to verify account
+- Using JWT to authenticate
+
+# Description
+
+<div align="center">
+
 | Module                                                         | Description          |
 | -------------------------------------------------------------- | -------------------- |
 | [NestJS](https://nestjs.com/)                                  | Core Module          |
@@ -17,4 +42,44 @@
 | [Cloudinary](https://cloudinary.com/)                          | Upload file to cloud |
 | [Bcrypt](https://www.npmjs.com/package/bcrypt)                 | encrypt password     |
 | [Graphql-upload](https://www.npmjs.com/package/graphql-upload) | Upload file module   |
----
+
+</div>
+
+# Deployment
+
+- [Adaptable.io](https://adaptable.io/) : [Deploy Link](https://nestjsgraphqlbasic.adaptable.app/graphql)
+
+# Guide to use
+
+## Clone project
+
+```bash
+git clone https://github.com/Desplay/NestJS_MongoDB_GraphQL_Basic.git
+```
+
+## Install dependencies
+
+```bash
+npm install --force
+```
+
+## Run project
+
+```bash
+npm run start:dev
+```
+
+# License
+
+[MIT licensed](LICENSE).
+
+# Contact
+
+- [Facebook](https://www.facebook.com/Desplay)
+
+- [Email](mailto:desplayshido@gmail.com)
+
+- [Github](https://github.com/Desplay)
+# Author & Contributors
+
+[![contributors](https://contributors-img.web.app/image?repo=desplay/NestJS_MongoDB_GraphQL_Basic)](https://github.com/Desplay/heart-care-project/graphs/contributors)

@@ -5,14 +5,18 @@
 
 ## Description
 
-| Module                                                                 |   Description        |
-| ---------------------------------------------------------------------- | -------------------- |
-| [NestJS](https://nestjs.com/)                                          | Core Module          |
-| [MongoDB](https://www.mongodb.com/)                                    | Database             |
-| [GraphQL](https://graphql.org/)                                        | graphql module       |
-| [TypeScript](https://www.typescriptlang.org/)                          | Programming Language |
-| [NodeMailer](https://nodemailer.com/about/)                            | Send email           |
-| [Mongoose](https://mongoosejs.com/docs/queries.html)                   | Connect to database  |
-| [Cloudinary](https://cloudinary.com/)                                  | Upload file to cloud |
-| [Bcrypt](https://www.npmjs.com/package/bcrypt)                         | encrypt password     |
-| [Graphql-upload](https://www.npmjs.com/package/graphql-upload)         | Upload file module   |
+<p align="center">
+
+| Module                                                         | Description          |
+| -------------------------------------------------------------- | -------------------- |
+| [NestJS](https://nestjs.com/)                                  | Core Module          |
+| [MongoDB](https://www.mongodb.com/)                            | Database             |
+| [GraphQL](https://graphql.org/)                                | graphql module       |
+| [TypeScript](https://www.typescriptlang.org/)                  | Programming Language |
+| [NodeMailer](https://nodemailer.com/about/)                    | Send email           |
+| [Mongoose](https://mongoosejs.com/docs/queries.html)           | Connect to database  |
+| [Cloudinary](https://cloudinary.com/)                          | Upload file to cloud |
+| [Bcrypt](https://www.npmjs.com/package/bcrypt)                 | encrypt password     |
+| [Graphql-upload](https://www.npmjs.com/package/graphql-upload) | Upload file module   |
+
+</p>

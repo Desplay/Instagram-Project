@@ -20,6 +20,8 @@ _Basic Instagram operating model_
 
 </div>
 
+#
+
 # Highlights
 
 - Using Nesjs framework, GraphQL, MongoDB, easy to use and develop

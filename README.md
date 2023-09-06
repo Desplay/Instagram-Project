@@ -3,10 +3,7 @@
 </p>
   <p align="center">A basic project using <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building server-side applications. coding by <a href="https://github.com/Desplay" targer="_blank">Desplay</a></p>
 
-## Description
-
-<p align="center">
-
+---
 | Module                                                         | Description          |
 | -------------------------------------------------------------- | -------------------- |
 | [NestJS](https://nestjs.com/)                                  | Core Module          |
@@ -18,5 +15,4 @@
 | [Cloudinary](https://cloudinary.com/)                          | Upload file to cloud |
 | [Bcrypt](https://www.npmjs.com/package/bcrypt)                 | encrypt password     |
 | [Graphql-upload](https://www.npmjs.com/package/graphql-upload) | Upload file module   |
-
-</p>
+---

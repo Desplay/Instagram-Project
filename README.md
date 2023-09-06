@@ -28,14 +28,6 @@ _Basic Instagram operating model_
 - Send email to verify account
 - Using JWT to authenticate
 
-# Basic functions graphs
-
-<div align="center">
-
-<img src="./docs/images/Model.png">
-
-</div>
-
 # Description
 
 | Module                                                         | Description          |
@@ -78,7 +70,7 @@ _Basic Instagram operating model_
 
 ## More guide ?
 
-  [here !](./docs/guide.md)
+  [here !](https://desplays.gitbook.io/instagram-project/)
 
 # License
 

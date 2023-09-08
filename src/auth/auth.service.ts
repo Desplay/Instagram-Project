@@ -22,33 +22,6 @@ export class AuthService {
     private readonly authErrorHanding: AuthErrorHanding,
   ) {}
 
-  private async createUser(user: UserSignUp): Promise<User> {
-    const user_exist = await this.usersService.findOneUser(user.email);
-    if (user_exist) return undefined;
-    const encodePassword = hashSync(user.password, genSaltSync());
-    const OTPCode = createOTPCode();
-    const new_user = {
-      deactive: false,
-      verify_account: false,
-      username: user.username,
-      email: user.email,
-      password: encodePassword,
-      OTPCode,
-    };
-    return new_user;
-  }
-
-  private createEmptyProfile(user: UserSignUp): Profile {
-    const new_profile: Profile = {
-      name: user.username,
-      birthday: null,
-      age: null,
-      description: null,
-      userId: null,
-    };
-    return new_profile;
-  }
-
   async SignIn(user: UserSignIn): Promise<AuthPayload> {
     const user_exist = await this.authErrorHanding.validateSignIn(
       user.NameOrEmail,
@@ -62,16 +35,14 @@ export class AuthService {
     return { token };
   }
 
-  async SignUp(user: UserSignUp): Promise<AuthPayload> {
+  async SignUp(user: UserSignUp): Promise<boolean> {
     const new_user = await this.createUser(user);
-    if (!new_user) return undefined;
+    if (!new_user) return false;
     const user_id = await this.usersService.createUser(new_user);
     const new_profile = this.createEmptyProfile(user);
     await this.profilesService.createProfile(new_profile, user_id);
     await this.mailService.sendMail(new_user.email, new_user.OTPCode.code);
-    const payload = { user_id: user_id };
-    const token = await this.jwtService.CreateToken(payload);
-    return { token };
+    return true;
   }
 
   async getUserId(email: string): Promise<string> {
@@ -130,5 +101,32 @@ export class AuthService {
     await this.mailService.sendMail(user.email, user.OTPCode.code);
     const message = `OTP code is sent to ${user.email}, use it to reset password`;
     return message;
+  }
+
+  private async createUser(user: UserSignUp): Promise<User> {
+    const user_exist = await this.usersService.findOneUser(user.email);
+    if (user_exist) return undefined;
+    const encodePassword = hashSync(user.password, genSaltSync());
+    const OTPCode = createOTPCode();
+    const new_user = {
+      deactive: false,
+      verify_account: false,
+      username: user.username,
+      email: user.email,
+      password: encodePassword,
+      OTPCode,
+    };
+    return new_user;
+  }
+
+  private createEmptyProfile(user: UserSignUp): Profile {
+    const new_profile: Profile = {
+      name: user.username,
+      birthday: null,
+      age: null,
+      description: null,
+      userId: null,
+    };
+    return new_profile;
   }
 }

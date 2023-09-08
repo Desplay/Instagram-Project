@@ -43,7 +43,7 @@ type Likes {
 
 type Mutation {
   FollowProfile(profile_follow: String!): String!
-  SignUp(UserSignUp: UserSignUp!): AuthPayload!
+  SignUp(UserSignUp: UserSignUp!): String!
   UnfollowProfile(profile_unfollow: String!): String!
   UpdateProfile(ProfileInput: ProfileInput!): String!
   activeAccount: String!

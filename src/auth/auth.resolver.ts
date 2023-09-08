@@ -26,18 +26,19 @@ export class AuthResolver {
     return authPayload;
   }
 
-  @Mutation(() => AuthPayload)
+  @Mutation(() => String)
   async SignUp(
     @Args({ name: 'UserSignUp', type: () => UserSignUp })
     user: UserSignUp,
-  ): Promise<AuthPayload> {
-    const authPayload = await this.authService.SignUp(user);
-    if (!authPayload) {
+  ): Promise<string> {
+    const SignUpDone = await this.authService.SignUp(user);
+    if (!SignUpDone) {
       throw new ForbiddenException(
         'Sign up failed!, account already exist or invalid input type',
       );
     }
-    return authPayload;
+    const message = 'Sign up done!, you need to verify your account';
+    return message;
   }
 
   @Mutation(() => String)

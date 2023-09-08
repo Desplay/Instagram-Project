@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { ProfilesService } from '../profiles/profiles.service';
+import { ProfilesService } from './profiles.service';
 import { Profile } from './datatype/profile.dto';
 
 @Injectable()

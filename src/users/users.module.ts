@@ -8,7 +8,7 @@ import { UsersResolver } from './users.resolver';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { AuthErrorHanding } from 'src/auth/authValidate.service';
 import { AuthModule } from 'src/auth/auth.module';
-import { ProfileErrorHanding } from 'src/profiles/profiles.validate';
+import { ProfileErrorHanding } from 'src/profiles/profilesValidate.service';
 import { ProfilesModule } from 'src/profiles/profiles.module';
 
 @Module({

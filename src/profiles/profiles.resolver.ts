@@ -5,7 +5,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { ForbiddenException, UseGuards } from '@nestjs/common';
 import { ProfileInputPipe } from './profiles.pipe';
 import { AuthErrorHanding } from 'src/auth/authValidate.service';
-import { ProfileErrorHanding } from './profiles.validate';
+import { ProfileErrorHanding } from './profilesValidate.service';
 import { Request } from 'express';
 @Resolver()
 export class ProfilesResolver {

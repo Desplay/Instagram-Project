@@ -39,6 +39,7 @@ _Basic Instagram operating model_
 | [Cloudinary](https://cloudinary.com/)                          | Upload file to cloud |
 | [Bcrypt](https://www.npmjs.com/package/bcrypt)                 | encrypt password     |
 | [Graphql-upload](https://www.npmjs.com/package/graphql-upload) | Upload file module   |
+| [NanoID](https://www.npmjs.com/package/nanoid)                 | Create Code          |
 
 # Deployment
 

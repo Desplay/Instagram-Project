@@ -34,7 +34,6 @@ export class ProfilesService {
     if (!profile_found)
       profile_found = await this.ProfileModel.findById(input);
     if (!profile_found) return undefined;
-    console.log(profile_found);
     const { _id, name, age, birthday, description } = profile_found;
     return {
       id: _id.toString(),
@@ -53,7 +52,6 @@ export class ProfilesService {
     const Profiles_filtered = [];
     for await (const profile of profiles_found) {
       const { userId } = profile;
-      console.log(userId);
       const user_exist = await this.userService.findOneUser(
         userId.toString(),
       );

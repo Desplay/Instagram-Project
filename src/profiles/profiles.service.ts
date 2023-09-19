@@ -27,10 +27,14 @@ export class ProfilesService {
     return newProfile ? true : false;
   }
 
-  async findProfile(user_id: string): Promise<Profile> {
-    const profile_found = await this.ProfileModel.findOne({
-      userId: user_id,
+  async findProfile(input: string): Promise<Profile> {
+    let profile_found = await this.ProfileModel.findOne({
+      userId: input,
     });
+    if (!profile_found)
+      profile_found = await this.ProfileModel.findById(input);
+    if (!profile_found) return undefined;
+    console.log(profile_found);
     const { _id, name, age, birthday, description } = profile_found;
     return {
       id: _id.toString(),
@@ -49,10 +53,12 @@ export class ProfilesService {
     const Profiles_filtered = [];
     for await (const profile of profiles_found) {
       const { userId } = profile;
+      console.log(userId);
       const user_exist = await this.userService.findOneUser(
         userId.toString(),
       );
-      user_exist.deactive ? undefined : Profiles_filtered.push(profile);
+      if (user_exist)
+        user_exist.deactive ? undefined : Profiles_filtered.push(profile);
     }
     const Profiles: Profiles = {
       profiles: Profiles_filtered.map((profile) => {

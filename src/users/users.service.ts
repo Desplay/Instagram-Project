@@ -21,14 +21,13 @@ export class UsersService {
       $or: [{ username: input }, { email: input }],
     }).select('+password');
     if (user_found) return user_found;
-    try {
+    else {
       user_found = await this.UserModel.findById(input).select(
         '+password',
       );
-    } catch (error) {
-      return undefined;
+      if (user_found) return user_found;
     }
-    return user_found;
+    return undefined;
   }
 
   async updateUser(id: string, user: User): Promise<User> {

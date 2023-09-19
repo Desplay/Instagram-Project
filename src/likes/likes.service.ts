@@ -17,9 +17,8 @@ export class LikesService {
       postId: postid,
       userIdLiked: userid,
     });
-    const { postId, userIdLiked, createdAt } = await newLike.save();
+    const { userIdLiked, createdAt } = await newLike.save();
     const like: Like = {
-      postId: postId.toString(),
       userIdLiked: userIdLiked.toString(),
       createdAt: createdAt,
     };

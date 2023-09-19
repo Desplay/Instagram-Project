@@ -33,7 +33,6 @@ type Follows {
 
 type Like {
   createdAt: DateTime!
-  postId: String!
   userIdLiked: String!
 }
 

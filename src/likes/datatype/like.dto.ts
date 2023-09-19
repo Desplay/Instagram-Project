@@ -2,7 +2,6 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class Like {
-  @Field(() => String) postId: string;
   @Field(() => String) userIdLiked: string;
   @Field(() => Date) createdAt: Date;
 }

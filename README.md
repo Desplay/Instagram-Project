@@ -52,7 +52,7 @@ _Basic Instagram operating model_
 - ### 1. Clone project
 
   ```bash
-  git clone https://github.com/Desplay/NestJS_MongoDB_GraphQL_Basic.git
+  https://github.com/Desplay/Instagram-Project.git
   ```
 
 - ### 2. Install dependencies

@@ -1,8 +1,11 @@
-import { Context, Query, Resolver } from '@nestjs/graphql';
+import { Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { NotificationsService } from './notifications.service';
 import { AuthErrorHanding } from 'src/auth/authValidate.service';
-import { NotificationDTO } from './datatype/notifications.dto';
+import { Notification } from './datatype/notifications.dto';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from 'src/auth/auth.guard';
 
+@UseGuards(AuthGuard)
 @Resolver()
 export class NotificationsResolver {
   constructor(
@@ -10,15 +13,16 @@ export class NotificationsResolver {
     private readonly authErrorHanding: AuthErrorHanding,
   ) {}
 
-  @Query(() => [NotificationDTO])
+  @Query(() => [Notification])
   async getNotifications(@Context('req') req: Request) {
     const user_id = await this.authErrorHanding.getUserIdFromHeader(
       req.headers,
     );
+    console.log(await this.notificationsService.getNotifications(user_id));
     return await this.notificationsService.getNotifications(user_id);
   }
 
-  @Query(() => Boolean)
+  @Mutation(() => Boolean)
   async markAsRead(@Context('req') req: Request) {
     const user_id = await this.authErrorHanding.getUserIdFromHeader(
       req.headers,

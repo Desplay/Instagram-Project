@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class NotificationDTO {
+export class Notification {
   @Field(() => String)
   id: string;
   @Field(() => String)

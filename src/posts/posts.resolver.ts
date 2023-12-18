@@ -23,7 +23,6 @@ export class PostsResolver {
     private readonly authErrorHanding: AuthErrorHanding,
   ) {}
 
-  @UseGuards(AuthGuard)
   @Mutation(() => Post)
   async createPost(
     @Args(
@@ -52,7 +51,6 @@ export class PostsResolver {
     };
   }
 
-  @UseGuards(AuthGuard)
   @Mutation(() => String)
   async updatePost(
     @Args({ name: 'id', type: () => String }) post_id: string,
@@ -78,7 +76,6 @@ export class PostsResolver {
     return message;
   }
 
-  @UseGuards(AuthGuard)
   @Mutation(() => String)
   async deletePost(
     @Args({ name: 'id', type: () => String }) id: string,
@@ -91,7 +88,6 @@ export class PostsResolver {
     return message;
   }
 
-  @UseGuards(AuthGuard)
   @Query(() => Posts)
   async getPostsByProfileId(
     @Args({ name: 'profile_id', type: () => String }) profile_id: string,
@@ -122,8 +118,6 @@ export class PostsResolver {
     }
     return { posts: newPostsDetail };
   }
-
-  @UseGuards(AuthGuard)
   @Query(() => Posts)
   async getAllPosts(@Context('req') req: Request): Promise<Posts> {
     const user_id = await this.authErrorHanding.getUserIdFromHeader(
@@ -149,8 +143,6 @@ export class PostsResolver {
     }
     return { posts: newPostsDetail };
   }
-
-  @UseGuards(AuthGuard)
   @Query(() => Posts)
   async getAllPostsInDatabase(): Promise<Posts> {
     const posts = await this.postSevice.getAllPostsInDatabase();

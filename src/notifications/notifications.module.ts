@@ -7,11 +7,13 @@ import { FollowsModule } from 'src/follows/follows.module';
 import { NotificationSchema } from './datatype/notifications.entity';
 import { PostsModule } from 'src/posts/posts.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { JwtModule } from 'src/common/jwt/jwt.module';
 
 @Module({
   imports: [
     ProfilesModule,
     FollowsModule,
+    JwtModule,
     forwardRef(() => PostsModule),
     AuthModule,
     MongooseModule.forFeature([

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { NotificationEntity } from 'src/notifications/datatype/notifications.entity';
-import { NotificationDTO } from 'src/notifications/datatype/notifications.dto';
+import { Notification } from 'src/notifications/datatype/notifications.dto';
 import { FollowsService } from 'src/follows/follows.service';
 import { ProfilesService } from 'src/profiles/profiles.service';
 import { PostsService } from 'src/posts/posts.service';
@@ -68,15 +68,21 @@ export class NotificationsService {
     return true;
   }
 
-  async getNotifications(user_id: string): Promise<NotificationDTO[]> {
+  async getNotifications(user_id: string): Promise<Notification[]> {
     const notifications = await this.notificationModel
       .find({ userId: user_id })
       .sort({ createdAt: -1 })
       .exec();
-    notifications.forEach((notification) => {
-      notification.id = notification._id;
+    const return_notifications = notifications.map((notification) => {
+      return {
+        id: notification._id.toString(),
+        userId: notification.userId.toString(),
+        body: notification.body,
+        postId: notification.postId.toString(),
+      };
     });
-    return;
+
+    return return_notifications;
   }
 
   async markAsRead(user_id: string): Promise<boolean> {

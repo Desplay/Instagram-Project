@@ -4,6 +4,7 @@ import { AuthErrorHanding } from 'src/auth/authValidate.service';
 import { Notification } from './datatype/notifications.dto';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { Request } from 'express';
 
 @UseGuards(AuthGuard)
 @Resolver()

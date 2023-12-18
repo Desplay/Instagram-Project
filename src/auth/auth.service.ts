@@ -30,9 +30,16 @@ export class AuthService {
     const user_id = await this.usersService.throwUserId(
       user_exist.username,
     );
+    user_exist.login = true;
+    await this.usersService.updateUser(user_id, user_exist);
     const payload = { user_id: user_id };
     const token = await this.jwtService.CreateToken(payload);
     return { token };
+  }
+
+  async SignOut(user_id: string, user: User): Promise<void> {
+    user.login = false;
+    await this.usersService.updateUser(user_id, user);
   }
 
   async SignUp(user: UserSignUp): Promise<boolean> {
@@ -125,6 +132,7 @@ export class AuthService {
       birthday: null,
       age: null,
       description: null,
+      avatarUri: null,
       userId: null,
     };
     return new_profile;

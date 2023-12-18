@@ -3,6 +3,7 @@ import { User } from 'src/users/datatype/user.entity';
 import { UsersService } from '../users/users.service';
 import { compareSync } from 'bcrypt';
 import { JwtService } from 'src/common/jwt/jwt.service';
+import { UserSignUp } from 'src/users/datatype/user.dto';
 
 @Injectable()
 export class AuthErrorHanding {
@@ -39,6 +40,9 @@ export class AuthErrorHanding {
     if (!user_exist) {
       throw new ForbiddenException('User is not exist');
     }
+    // if (user_exist.login) {
+    //   throw new ForbiddenException('User is already login');
+    // }
     const ifMatch = compareSync(password, user_exist.password);
     if (!ifMatch) {
       throw new ForbiddenException('Password is wrong');
@@ -49,10 +53,16 @@ export class AuthErrorHanding {
     return user_exist;
   }
 
+  async validateSignUp(user: UserSignUp): Promise<User> {
+    const user_exist = await this.usersService.findOneUser(user.email);
+    if (user_exist) {
+      throw new ForbiddenException('User is already exist');
+    }
+    return user_exist;
+  }
+
   async getUserIdFromHeader(header: any): Promise<string> {
-    const payload = await this.jwtService.getPayloadFromAuthorization(
-      header,
-    );
+    const payload = await this.jwtService.getPayloadWithOutVerify(header);
     const user_id = payload['user_id'];
     const user = await this.usersService.findOneUser(user_id);
     if (!user) {

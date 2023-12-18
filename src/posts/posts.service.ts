@@ -13,19 +13,22 @@ export class PostsService {
     private readonly cloudService: CloudinaryService,
   ) {}
 
-  async createPost(post: PostInput, user_id: string): Promise<boolean> {
-    const file = await post.Image;
+  async createPost(post: PostInput, user_id: string): Promise<PostEntity> {
+    let file = await post.Image;
+    if (!file) {
+      file = post.File;
+    }
     const Post = new PostDTOToEntity().transform(post);
     Post.userId = user_id;
     const newPost = await new this.PostModel(Post).save();
     const newPostId = newPost._id.toString();
-    if (file) {
+    if (file.filename) {
       const url = await this.cloudService.uploadFile(file, newPostId);
-      if (!url) return false;
+      if (!url) return undefined;
       newPost.imageUrl = url;
     }
     await newPost.save();
-    return true;
+    return newPost;
   }
 
   async updatePost(
@@ -64,6 +67,16 @@ export class PostsService {
     const posts_found = await this.PostModel.find()
       .where('userId')
       .equals(user_id);
+    if (posts_found.length === 0) return undefined;
+    const posts = posts_found.map((post) => {
+      const { _id, title, content, imageUrl } = post;
+      return { id: _id.toString(), title, content, imageUrl };
+    });
+    return posts;
+  }
+
+  async getAllPostsInDatabase(): Promise<PostDTO[]> {
+    const posts_found = await this.PostModel.find();
     if (posts_found.length === 0) return undefined;
     const posts = posts_found.map((post) => {
       const { _id, title, content, imageUrl } = post;

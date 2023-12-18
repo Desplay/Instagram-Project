@@ -27,11 +27,16 @@ export class JwtService {
     return token ? await this.verifyToken(token) : undefined;
   }
 
+  async getPayloadWithOutVerify(header: string): Promise<Payload> {
+    const token = header['authorization'];
+    return await this.jwtService.verifyAsync(token);
+  }
+
   async CreateToken(payload: any): Promise<string> {
     const new_payload = {
       ...payload,
       iat: new Date().getTime(),
-      exp: new Date().getTime() + 60 * 60 * 1000,
+      exp: new Date().getTime() + 60 * 60 * 1000 * 12,
     };
     return await this.jwtService.signAsync(new_payload);
   }

@@ -23,7 +23,7 @@ export class ProfilesResolver {
       { type: () => ProfileInput },
       new ProfileInputPipe(),
     )
-    profileInput: Profile,
+    profileInput: ProfileInput,
     @Context('req') req: Request,
   ): Promise<string> {
     const user_id = await this.authErrorHanding.getUserIdFromHeader(

@@ -4,9 +4,9 @@ import { Like as LikeDTO } from './datatype/like.dto';
 @Injectable()
 export class LikesEntityToDTO implements PipeTransform {
   transform(value: any): LikeDTO {
-    const { userIdLiked, createdAt } = value;
+    const { createdAt } = value;
     const newLike: LikeDTO = {
-      userIdLiked: userIdLiked.toString(),
+      profileIdLiked: '',
       createdAt: createdAt,
     };
     return newLike;

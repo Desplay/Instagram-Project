@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { File } from './datatype/file.entity';
 import { v2 } from 'cloudinary';
 import { Readable } from 'stream';
 import toStream = require('buffer-to-stream');
@@ -15,9 +14,18 @@ export class CloudinaryService {
         .on('end', () => resolve(Buffer.concat(buffer))),
     );
   }
-  async uploadFile(file: File, postID: string): Promise<string> {
+  async uploadFile(file: any, postID: string): Promise<string> {
+    if (!file.filename) {
+      return undefined;
+    }
     file.filename = `${postID}.${file.filename.split('.').pop()}`;
-    const buffer = await this.streamToBuffer(file.createReadStream());
+    let buffer: any;
+    if (file.base64) {
+      buffer = Buffer.from(file.base64, 'base64');
+    } else {
+      buffer = await this.streamToBuffer(file.createReadStream());
+    }
+
     const result = await new Promise((resolve) => {
       const upload = v2.uploader.upload_stream(
         { folder: 'nestjs_graphql_mongodb_basic', public_id: postID },

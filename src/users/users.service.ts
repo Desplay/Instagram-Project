@@ -22,9 +22,13 @@ export class UsersService {
     }).select('+password');
     if (user_found) return user_found;
     else {
-      user_found = await this.UserModel.findById(input).select(
-        '+password',
-      );
+      try {
+        user_found = await this.UserModel.findById(input).select(
+          '+password',
+        );
+      } catch (err) {
+        if (err) return undefined;
+      }
       if (user_found) return user_found;
     }
     return undefined;

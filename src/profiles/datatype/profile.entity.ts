@@ -5,6 +5,7 @@ export interface Profile {
   birthday: Date;
   age: number;
   description: string;
+  avatarUri: string;
   userId: { type: Schema.Types.ObjectId; ref: 'User' };
 }
 export interface ProfileEntity extends Profile, Document {}
@@ -14,6 +15,7 @@ export const ProfileSchema = new Schema<Profile>({
   birthday: { type: Date, nullable: true },
   age: { type: Number, nullable: true },
   description: { type: String, nullable: true },
+  avatarUri: { type: String, nullable: true },
   userId: {
     type: Schema.Types.ObjectId,
     ref: 'User',

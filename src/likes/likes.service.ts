@@ -4,12 +4,14 @@ import { Model } from 'mongoose';
 import { Like as LikeEntity } from './datatype/like.entity';
 import { LikesEntityToDTO } from './lipes.pipe';
 import { Like } from './datatype/like.dto';
+import { ProfilesService } from 'src/profiles/profiles.service';
 
 @Injectable()
 export class LikesService {
   constructor(
     @InjectModel('Like')
     private readonly LikeModel: Model<LikeEntity>,
+    private readonly profilesService: ProfilesService,
   ) {}
 
   async createLike(postid: string, userid: string): Promise<Like> {
@@ -19,7 +21,9 @@ export class LikesService {
     });
     const { userIdLiked, createdAt } = await newLike.save();
     const like: Like = {
-      userIdLiked: userIdLiked.toString(),
+      profileIdLiked: (
+        await this.profilesService.findProfile(userIdLiked.toString())
+      ).id,
       createdAt: createdAt,
     };
     return like;
@@ -31,10 +35,15 @@ export class LikesService {
       .equals(postId);
     if (likes.length === 0) return [];
     const new_likes: Like[] = [];
-    likes.map((like) => {
+    for await (const like of likes) {
+      const profileIdLiked = (
+        await this.profilesService.findProfile(like.userIdLiked.toString())
+      ).id;
+      console.log(profileIdLiked);
       const new_like: Like = new LikesEntityToDTO().transform(like);
+      new_like.profileIdLiked = profileIdLiked;
       new_likes.push(new_like);
-    });
+    }
     return new_likes;
   }
 

@@ -21,8 +21,16 @@ export class Posts {
 }
 
 @InputType()
+class File {
+  @Field(() => String, { nullable: true }) base64: string;
+  @Field(() => String, { nullable: true }) filename: string;
+  @Field(() => String, { nullable: true }) filetype: string;
+}
+
+@InputType()
 export class PostInput {
   @Field(() => String) title: string;
   @Field(() => String) content: string;
+  @Field(() => File, { nullable: true }) File: File;
   @Field(() => GraphQLUpload, { nullable: true }) Image: FileUpload;
 }

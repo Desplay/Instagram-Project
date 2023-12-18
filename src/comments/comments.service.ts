@@ -4,12 +4,14 @@ import { Model } from 'mongoose';
 import { Comment } from './datatype/comment.entity';
 import { Comment as CommentDTO } from './datatype/comment.dto';
 import { CommentEntityToDTO } from './comments.pipe';
+import { ProfilesService } from 'src/profiles/profiles.service';
 
 @Injectable()
 export class CommentsService {
   constructor(
     @InjectModel('Comment')
     private readonly CommentModel: Model<Comment>,
+    private readonly profilesService: ProfilesService,
   ) {}
 
   async createComment(
@@ -29,10 +31,14 @@ export class CommentsService {
   async findAllComments(post_id: string): Promise<CommentDTO[]> {
     const comments = await this.CommentModel.find({ postId: post_id });
     const new_comments: CommentDTO[] = [];
-    comments.map((comment) => {
+    for await (const comment of comments) {
+      const profile_id = (
+        await this.profilesService.findProfile(comment.userId?.toString())
+      ).id;
       const newComment = new CommentEntityToDTO().transform(comment);
+      newComment.profile_id = profile_id;
       new_comments.push(newComment);
-    });
+    }
     return new_comments;
   }
 

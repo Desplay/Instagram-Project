@@ -7,6 +7,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { JwtModule } from 'src/common/jwt/jwt.module';
 import { LikeSchema } from './datatype/like.entity';
 import { NotificationsModule } from 'src/notifications/notifications.module';
+import { ProfilesModule } from 'src/profiles/profiles.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { NotificationsModule } from 'src/notifications/notifications.module';
     AuthModule,
     NotificationsModule,
     JwtModule,
+    ProfilesModule,
     MongooseModule.forFeature([{ name: 'Like', schema: LikeSchema }]),
   ],
   providers: [LikesService, LikesResolver],

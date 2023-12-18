@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Context, Query } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { UserSignUp, UserSignIn } from 'src/users/datatype/user.dto';
 import { AuthPayload } from 'src/auth/datatype/auth.dto';
@@ -13,7 +13,12 @@ export class AuthResolver {
     private readonly authErrorHanding: AuthErrorHanding,
   ) {}
 
-  @Query(() => AuthPayload)
+  @Query(() => String)
+  async hello(): Promise<string> {
+    return 'Hello World!';
+  }
+
+  @Mutation(() => AuthPayload)
   async SignIn(
     @Args({ name: 'UserSignIn', type: () => UserSignIn })
     user: UserSignIn,
@@ -27,10 +32,32 @@ export class AuthResolver {
   }
 
   @Mutation(() => String)
+  async SignOut(@Context('req') req: Request): Promise<string> {
+    if (!req.headers.authorization) {
+      throw new ForbiddenException('Request header !');
+    }
+    const user_id = await this.authErrorHanding.getUserIdFromHeader(
+      req.headers,
+    );
+    const user = await this.authErrorHanding.validateUserExist(user_id);
+    if (!user.login) {
+      throw new ForbiddenException('User is not login');
+    }
+    user.login = false;
+    await this.authService.SignOut(user_id, user);
+    const message = 'Sign out done!';
+    return message;
+  }
+
+  @Mutation(() => String)
   async SignUp(
     @Args({ name: 'UserSignUp', type: () => UserSignUp })
     user: UserSignUp,
   ): Promise<string> {
+    const user_exist = await this.authErrorHanding.validateSignUp(user);
+    if (user_exist) {
+      throw new ForbiddenException('User is already exist');
+    }
     const SignUpDone = await this.authService.SignUp(user);
     if (!SignUpDone) {
       throw new ForbiddenException(

@@ -6,7 +6,7 @@ export class Comment {
   @Field(() => String) id: string;
   @Field(() => String, { nullable: true }) reply_id: string;
   @Field(() => String) post_id: string;
-  @Field(() => String) user_id: string;
+  @Field(() => String) profile_id: string;
   @Field(() => String) body: string;
   @Field(() => Date) created_at: Date;
   @Field(() => Date) updated_at: Date;
@@ -27,5 +27,6 @@ export class CommentInput {
   @Field(() => String)
   body: string;
 
-  @Field(() => String, { defaultValue: null }) replyCommenId?: string;
+  @Field(() => String, { defaultValue: null, nullable: true })
+  replyCommenId?: string;
 }

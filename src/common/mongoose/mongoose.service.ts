@@ -9,6 +9,7 @@ export class MongooseService {
   ) {}
 
   getdbHandle(): Connection {
+    console.log(this.connection);
     return this.connection;
   }
 }

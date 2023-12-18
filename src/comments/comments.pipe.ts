@@ -21,20 +21,12 @@ export class CommentsPipe implements PipeTransform {
 @Injectable()
 export class CommentEntityToDTO implements PipeTransform {
   transform(value: any): CommentDTO {
-    const {
-      reCommentId,
-      _id,
-      postId,
-      userId,
-      body,
-      createdAt,
-      updatedAt,
-    } = value;
+    const { reCommentId, _id, postId, body, createdAt, updatedAt } = value;
     const newComment: CommentDTO = {
       id: _id.toString(),
       reply_id: reCommentId ? reCommentId.toString() : null,
       post_id: postId.toString(),
-      user_id: userId.toString(),
+      profile_id: null,
       body,
       created_at: createdAt,
       updated_at: updatedAt,

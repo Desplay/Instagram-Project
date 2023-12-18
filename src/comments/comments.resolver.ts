@@ -2,11 +2,12 @@ import { ForbiddenException, UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { AuthErrorHanding } from 'src/auth/authValidate.service';
-import { CommentInput } from './datatype/comment.dto';
+import { CommentInput, Comment } from './datatype/comment.dto';
 import { CommentsService } from './comments.service';
-import { CommentsPipe } from './comments.pipe';
+import { CommentEntityToDTO, CommentsPipe } from './comments.pipe';
 import { NotificationsService } from 'src/notifications/notifications.service';
 import { Request } from 'express';
+import { ProfilesService } from 'src/profiles/profiles.service';
 
 @Resolver()
 export class CommentsResolver {
@@ -14,15 +15,16 @@ export class CommentsResolver {
     private readonly commentsService: CommentsService,
     private readonly authErrorHanding: AuthErrorHanding,
     private readonly notificationService: NotificationsService,
+    private readonly profileService: ProfilesService,
   ) {}
 
   @UseGuards(AuthGuard)
-  @Mutation(() => String)
+  @Mutation(() => Comment)
   async commentInPost(
     @Args({ name: 'Comment', type: () => CommentInput })
     comment: CommentInput,
     @Context('req') req: Request,
-  ) {
+  ): Promise<Comment> {
     const user_id = await this.authErrorHanding.getUserIdFromHeader(
       req.headers,
     );
@@ -45,8 +47,11 @@ export class CommentsResolver {
       user_id,
       newComment.postId.toString(),
     );
-    const message = 'Comment successfully';
-    return message;
+    const commentReturn = new CommentEntityToDTO().transform(newComment);
+    commentReturn.profile_id = (
+      await this.profileService.findProfile(newComment.userId.toString())
+    ).id;
+    return commentReturn;
   }
 
   @UseGuards(AuthGuard)
@@ -68,7 +73,7 @@ export class CommentsResolver {
   }
 
   @UseGuards(AuthGuard)
-  @Mutation(() => String)
+  @Mutation(() => Comment)
   async updateComment(
     @Args({ name: 'comment_id', type: () => String }) comment_id: string,
     @Args({ name: 'body', type: () => String }) body: string,

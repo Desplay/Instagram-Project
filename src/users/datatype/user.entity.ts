@@ -1,6 +1,7 @@
 import { Schema, Document, model } from 'mongoose';
 
 export interface User {
+  login?: boolean;
   deactive: boolean;
   verify_account: boolean;
   username: string;
@@ -16,6 +17,7 @@ export interface User {
 export interface UserEntity extends User, Document {}
 
 export const UserSchema = new Schema<User>({
+  login: { type: Boolean, required: true, default: false },
   deactive: { type: Boolean, required: true },
   verify_account: { type: Boolean, required: true },
   username: { type: String, required: true },

@@ -34,13 +34,15 @@ export class ProfilesService {
     if (!profile_found)
       profile_found = await this.ProfileModel.findById(input);
     if (!profile_found) return undefined;
-    const { _id, name, age, birthday, description } = profile_found;
+    const { _id, name, age, birthday, description, avatarUri } =
+      profile_found;
     return {
       id: _id.toString(),
       name,
       age,
       birthday,
       description,
+      avatarUri,
     };
   }
 
@@ -60,9 +62,10 @@ export class ProfilesService {
     }
     const Profiles: Profiles = {
       profiles: Profiles_filtered.map((profile) => {
-        const { _id, name, age, birthday, description } = profile;
+        const { _id, name, age, birthday, description, avatarUri } =
+          profile;
         const id: string = _id.toString();
-        return { id, name, age, birthday, description };
+        return { id, name, age, birthday, description, avatarUri };
       }),
     };
     return Profiles;

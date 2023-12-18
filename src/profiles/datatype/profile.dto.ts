@@ -1,10 +1,12 @@
 import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
+import { GraphQLUpload, FileUpload } from 'graphql-upload';
 import { IsNotEmpty } from 'class-validator';
 
 @ObjectType()
 export class Profile {
   @Field(() => String) id: string;
   @Field(() => String) name: string;
+  @Field(() => String, { nullable: true }) avatarUri: string;
   @Field(() => Date, { nullable: true }) birthday: Date;
   @Field(() => Int, { nullable: true }) age: number;
   @Field(() => String, { nullable: true }) description: string;
@@ -24,4 +26,5 @@ export class ProfileInput {
   @Field(() => Date) birthday: Date;
   @Field(() => Int) age: number;
   @Field(() => String) description: string;
+  @Field(() => GraphQLUpload, { nullable: true }) Image: FileUpload;
 }

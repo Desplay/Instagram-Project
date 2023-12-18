@@ -1,6 +1,9 @@
 export interface File {
-  filename: string;
-  mimetype: string;
-  encoding: string;
-  createReadStream: () => any;
+  file: {
+    filename: string;
+    mimetype: string;
+    encoding: string;
+    createReadStream?: () => any;
+  };
+  base64?: string;
 }

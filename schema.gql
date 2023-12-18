@@ -69,6 +69,13 @@ type Mutation {
   verifyAccount(OTPCode: String!, email: String!): String!
 }
 
+type NotificationDTO {
+  body: String!
+  id: String!
+  postId: String!
+  userId: String!
+}
+
 type Post {
   comments: [Comment!]!
   content: String!
@@ -118,9 +125,11 @@ type Query {
   getAllPostsInDatabase: Posts!
   getFollowing: Follows!
   getLikesDetail(PostId: String!): Likes!
+  getNotifications: [NotificationDTO!]!
   getPostsByProfileId(profile_id: String!): Posts!
   getUserFollowerMyProfile: Follows!
   hello: String!
+  markAsRead: Boolean!
 }
 
 """The `Upload` scalar type represents a file upload."""

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { NotificationEntity } from 'src/notifications/datatype/notifications.entity';
+import { NotificationDTO } from 'src/notifications/datatype/notifications.dto';
 import { FollowsService } from 'src/follows/follows.service';
 import { ProfilesService } from 'src/profiles/profiles.service';
 import { PostsService } from 'src/posts/posts.service';
@@ -65,5 +66,23 @@ export class NotificationsService {
     });
     await notification.save();
     return true;
+  }
+
+  async getNotifications(user_id: string): Promise<NotificationDTO[]> {
+    const notifications = await this.notificationModel
+      .find({ userId: user_id })
+      .sort({ createdAt: -1 })
+      .exec();
+    notifications.forEach((notification) => {
+      notification.id = notification._id;
+    });
+    return;
+  }
+
+  async markAsRead(user_id: string): Promise<boolean> {
+    const status = await this.notificationModel.findOneAndDelete({
+      userId: user_id,
+    });
+    return status ? true : false;
   }
 }

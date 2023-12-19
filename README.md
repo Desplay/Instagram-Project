@@ -20,7 +20,7 @@ _Basic Instagram operating model_
 
 # Highlights
 
-- Using Nesjs framework, GraphQL, MongoDB, easy to use and develop
+- Using Nestjs framework, GraphQL, MongoDB, easy to use and develop
 - Basic SignIn, SignUp Account, password is encrypted
 - Upload file to Cloudinary
 - Send email to verify account

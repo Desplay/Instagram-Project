@@ -52,7 +52,7 @@ _Basic Instagram operating model_
 - ### 1. Clone project
 
   ```bash
-  https://github.com/Desplay/Instagram-Project.git
+  git clone https://github.com/Desplay/Instagram-Project.git
   ```
 
 - ### 2. Install dependencies

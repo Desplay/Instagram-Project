@@ -27,6 +27,7 @@ export class FollowsResolver {
       user_id,
       profile_follow,
     );
+    console.log(follow_created);
     if (!follow_created) {
       throw new ForbiddenException('Follow creation failed');
     }

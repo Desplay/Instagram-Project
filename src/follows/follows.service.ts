@@ -22,9 +22,9 @@ export class FollowsService {
     if (!user_follow && user_id === user_follow) return false;
     const check = await this.FollowModel.find()
       .where('userId')
-      .equals(user_id)
+      .equals(user_follow)
       .where('followingByUserId')
-      .equals(user_follow);
+      .equals(user_id);
     if (check.length !== 0) return false;
     const follow = new this.FollowModel({
       userId: user_id,
